@@ -1,0 +1,6 @@
+/application/config/database.php
+/vendor
+/assets
+/application/libraries
+/application/config/config.php
+.htaccess
