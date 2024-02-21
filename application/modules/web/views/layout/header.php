@@ -72,7 +72,7 @@
                         <nav id="mobile_menu_active">
                             <ul id="menu">
                                 <li><a href="<?php echo site_url(); ?>"><?php echo $this->lang->line('home'); ?></a></li>
-                                <li><a href="<?php echo site_url('about'); ?>"><?php echo $this->lang->line('about'); ?>S__</a></li>
+                                <li><a href="<?php echo site_url('about'); ?>"><?php echo $this->lang->line('about'); ?>SSS</a></li>
 
                                 <li><a href="#"><?php echo $this->lang->line('announcement'); ?> <span class="icon fas fa-chevron-down"></span></a>
                                     <ul class="drop">
