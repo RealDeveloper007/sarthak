@@ -1039,10 +1039,10 @@ class Report_Model extends MY_Model
     */
     public function is_running_session()
     {
-
+        $this->db->select('*');
+        $this->db->from('academic_years');
         $this->db->where('is_running', 1);
-
-        return $this->db->get('academic_years')->row();
+        return $this->db->get()->row();
     }
 
     public function get_userdetail($id)
@@ -1055,14 +1055,14 @@ class Report_Model extends MY_Model
 
     public function get_all_incharge_classes()
     {
+        $this->db->select('U.class_name,U.class_section');
+        $this->db->from('users AS U');
+        $this->db->join('academic_years AS A', 'A.id =U.academic_years_id', 'left');
+        $this->db->where('U.role_id', 5);
+        $this->db->order_by('U.class_name','asc');
+        $this->db->order_by('U.class_section','asc');
+        return $this->db->get()->result();
 
-        $this->db->select('class_name,class_section');
-
-        $this->db->where(['role_id' => 5]);
-
-        $this->db->where('class_name >', 3);
-
-        return $this->db->order_by('class_name', 'asc')->order_by('class_section', 'asc')->get('users')->result();
     }
 
     public function get_student_details($class, $section, $sessionId)
@@ -1075,6 +1075,7 @@ class Report_Model extends MY_Model
         $this->db->where('session_id', $sessionId);
 
         return $this->db->get('result_students')->result();
+        
     }
 
     public function get_student_info($id)

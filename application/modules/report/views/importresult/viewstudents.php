@@ -2,8 +2,8 @@
     <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
             <div class="x_title">
-                <h3 class="head-title"><i class="fa fa-users"></i><small> View Students</small></h3>
-                <ul class="nav navbar-left panel_toolbox">
+            <h3 class="head-title"><i class="fa fa-users"></i><small> View Students <span>Current Session - <?= $academic_year ?></small></span></h3>
+                            <ul class="nav navbar-left panel_toolbox">
                     <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
                 </ul>
                 <div class="clearfix"></div>

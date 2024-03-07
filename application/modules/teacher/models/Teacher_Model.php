@@ -82,11 +82,14 @@ class Teacher_Model extends MY_Model {
 
     function get_incharge_list(){
 
-        $this->db->where('role_id',5);
+        $this->db->select('U.*,A.session_year');
+        $this->db->from('users AS U');
+        $this->db->join('academic_years AS A', 'A.id =U.academic_years_id', 'left');
+        $this->db->where('U.role_id', 5);
+        $this->db->order_by('U.class_name','asc');
+        $this->db->order_by('U.status','desc');
+        return $this->db->get()->result();
 
-        $this->db->order_by('class_name','asc');
-
-        return $this->db->get('users')->result();
     }
 
 }

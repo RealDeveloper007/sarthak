@@ -26,7 +26,8 @@ class Year_Model extends MY_Model {
         $this->db->select('*');
         $this->db->from('academic_years');
         $this->db->where('is_running', 1);
-        return $this->db->get()->result()[0]->id;
+        $ID =  $this->db->get()->result()[0]->id;
+        return $ID;
         
     }    
         

@@ -453,7 +453,7 @@ class Teacher extends MY_Controller {
     }
 
 
-    public function importquestions()
+    public function importIncharges()
     {
         $data = array();
         $data['title'] = 'Import Excel Sheet | TechArise';
@@ -497,22 +497,33 @@ class Teacher extends MY_Controller {
                     //insert into users table
                     $counter = 0;
                     $InsertData = [];
-                    foreach ($indexedArray as $key) {
+                    $UpdateData = [];
+                    $academicYear = $this->year->GetCurrentSession();
+
+                    foreach ($indexedArray as $key) 
+                    {
                         //check in user table 
                         if ($key['Email Id'] != '') {
-                            $query = $this->db->where('email',$key['Email Id'])->get('users');
-                            if($query->num_rows() == 0) {
-                                $InsertData[$counter]['email'] = $key['Email Id'];
-                                $InsertData[$counter]['password'] = md5('123456');
-                                $InsertData[$counter]['temp_password'] = base64_encode('123456');
-                                $InsertData[$counter]['role_id'] = 5;
-                                $InsertData[$counter]['class_name'] = $key['Class'];
-                                $InsertData[$counter]['class_section'] = $key['Section'];
-                                $InsertData[$counter]['name'] = $key['Incharge Name'];
-                                $counter++;
+                            $query = $this->checkUserEmail(trim($key['Email Id']));
+                            if($query == 0) 
+                            {
+                                $InsertData[$counter]['academic_years_id']  = $academicYear;
+                                $InsertData[$counter]['email']              = trim($key['Email Id']);
+                                $InsertData[$counter]['password']           = md5('123456');
+                                $InsertData[$counter]['temp_password']      = base64_encode('123456');
+                                $InsertData[$counter]['role_id']            = 5;
+                                $InsertData[$counter]['class_name']         = $key['Class'];
+                                $InsertData[$counter]['class_section']      = $key['Section'];
+                                $InsertData[$counter]['name']               = $key['Incharge Name'];
+
                             }
+
+                            $counter++;
+
                         }
                     }
+
+                    // print_r($UpdateData);  die;
                     //save into users table
                     if(!empty($InsertData)) {
                         $this->db->insert_batch('users', $InsertData);
@@ -528,6 +539,16 @@ class Teacher extends MY_Controller {
                 }   
             }
         }
+    }
+
+    private function UpdateYear($email,$UpdateData)
+    {
+        return $this->db->where('email',$email)->update('users',$updateData);
+    }
+
+    private function checkUserEmail($email)
+    {
+        return $this->db->where('email',$email)->get('users')->num_rows();
     }
 
 

@@ -290,6 +290,10 @@ class Year extends MY_Controller {
         $academic_year = $ay->session_year;
         $this->year->update('settings', array('academic_year_id' => $id, 'running_year'=>$academic_year), array('status' => 1));       
         
+        $this->year->update('users', array('status' => 0), ['academic_years_id !=' => $id,'academic_years_id !=' => 0]);    
+
+        $this->year->update('users', array('status' => 1), array('academic_years_id' => $id));    
+
         create_log('Has been activated a academic Year : '.$academic_year);   
         
         success($this->lang->line('update_success'));

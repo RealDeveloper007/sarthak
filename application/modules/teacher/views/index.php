@@ -22,23 +22,23 @@
                 <div class="" data-example-id="togglable-tabs">
                     
                     <ul  class="nav nav-tabs bordered">
-                        <li class="<?php if(isset($list)){ echo 'active'; }?>"><a href="#tab_teacher_list"   role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-list-ol"></i> <?php echo $this->lang->line('teacher'); ?> <?php echo $this->lang->line('list'); ?></a> </li>
+                        <li class="<?php if(isset($list)){ echo 'active'; }?>"><a href="#tab_teacher_list" data-target="#tab_teacher_list"  role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-list-ol"></i> <?php echo $this->lang->line('teacher'); ?> <?php echo $this->lang->line('list'); ?></a> </li>
                         
                         <?php if(has_permission(ADD, 'teacher', 'teacher')){ ?>
-                        <li  class=""><a href="#tab_add_teacher"  role="tab"  data-toggle="tab" aria-expanded="false"><i class="fa fa-plus-square-o"></i> <?php echo $this->lang->line('add'); ?> <?php echo $this->lang->line('teacher'); ?></a> </li>                          
+                        <li  class=""><a href="#tab_add_teacher" data-target="#tab_add_teacher" role="tab"  data-toggle="tab" aria-expanded="false"><i class="fa fa-plus-square-o"></i> <?php echo $this->lang->line('add'); ?> <?php echo $this->lang->line('teacher'); ?></a> </li>                          
                         <?php } ?>  
                         
                         <?php if(isset($edit)){ ?>
-                            <li  class="active"><a href="#tab_edit_teacher"  role="tab"  data-toggle="tab" aria-expanded="false"><i class="fa fa-pencil-square-o"></i> <?php echo $this->lang->line('edit'); ?> <?php echo $this->lang->line('teacher'); ?></a> </li>                          
+                            <li  class="active"><a href="#tab_edit_teacher" data-target="#tab_edit_teacher" role="tab"  data-toggle="tab" aria-expanded="false"><i class="fa fa-pencil-square-o"></i> <?php echo $this->lang->line('edit'); ?> <?php echo $this->lang->line('teacher'); ?></a> </li>                          
                         <?php } ?>   
                             
                          <?php if(isset($detail)){ ?>
-                            <li  class="active"><a href="#tab_view_teacher"  role="tab"  data-toggle="tab" aria-expanded="false"><i class="fa fa-eye"></i> <?php echo $this->lang->line('view'); ?> <?php echo $this->lang->line('teacher'); ?></a> </li>                          
+                            <li  class="active"><a href="#tab_view_teacher" data-target="#tab_view_teacher" role="tab"  data-toggle="tab" aria-expanded="false"><i class="fa fa-eye"></i> <?php echo $this->lang->line('view'); ?> <?php echo $this->lang->line('teacher'); ?></a> </li>                          
                         <?php } ?> 
 
-                        <li class="<?php if(isset($import_teacher)){ echo 'active'; }?>"><a href="#tab_teacher_import"   role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-plus-square-o"></i>Import Incharge List</a> </li>
+                        <li class="<?php if(isset($import_teacher)){ echo 'active'; }?>"><a href="#tab_teacher_import" data-target="#tab_teacher_import"  role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-plus-square-o"></i>Import Incharge List</a> </li>
 
-                        <li class="<?php if(isset($import_teacher)){ echo 'active'; }?>"><a href="#tab_teacher_view"   role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-eye"></i>View Incharge List</a> </li>  
+                        <li class="<?php if(isset($import_teacher)){ echo 'active'; }?>"><a href="#tab_teacher_view" data-target="#tab_teacher_view"  role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-eye"></i>View Incharge List</a> </li>  
                             
                     </ul>
                     <br/>
@@ -412,7 +412,7 @@
                             <div class="x_content"> 
                             <a href="<?= base_url('assets/csv/Class incharges details.xlsx')?>" class="btn btn-warning">Download Excel for Import Teachers</a>
 
-                              <form method="post" action="<?= base_url('teacher/importquestions') ?>"  enctype="multipart/form-data">
+                              <form method="post" action="<?= base_url('teacher/importIncharges') ?>"  enctype="multipart/form-data">
                                 <div class="row">                  
                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                         <h5  class="column-title"><strong>Import Class Incharge:</strong></h5>
@@ -449,10 +449,13 @@
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->lang->line('sl_no'); ?></th>
+                                        <th>Academic Year</th>
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Class</th>
-                                        <th>Section</th>                                            
+                                        <th>Section</th>    
+                                        <th>Status</th>    
+                                                                              
                                     </tr>
                                 </thead>
                                 <tbody>   
@@ -460,10 +463,12 @@
                                         <?php foreach($incharge_list as $obj){ ?>
                                         <tr>
                                             <td><?php echo $count++; ?></td>
+                                            <td><?php echo $obj->session_year;?></td>
                                             <td><?php echo $obj->name;?></td>
                                             <td><?php echo $obj->email; ?></td>
                                             <td><?php echo $obj->class_name; ?></td>
                                             <td><?php echo $obj->class_section; ?></td>
+                                            <td><?php echo $obj->status == 1 ? 'Active' : 'In-Active'; ?></td>
                                         </tr>
                                         <?php } ?>
                                     <?php } ?>
@@ -480,7 +485,7 @@
     </div>
 </div>
 
-<!-- <form method="post" action="<?= base_url('teacher/importquestions') ?>"  enctype="multipart/form-data">
+<!-- <form method="post" action="<?= base_url('teacher/importIncharges') ?>"  enctype="multipart/form-data">
         <input type="file"  name="fileURL" accept=".csv,.xlsx"  required>
         <br>
         <br>
@@ -554,10 +559,36 @@
                   'pdfHtml5',
                   'pageLength'
               ],
-              search: true
+              search: true,
+              initComplete: function () {
+                    this.api().columns([1,6]).every(function (ind) {
+                        var column = this;
+                        if(ind != 0) {
+                            var select = $('<select class="form-control custom-cls"><option value="">All</option></select>').appendTo($(column.header()).empty()).on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex($(this).val());
+                                column.search(val ? '^' + val + '$' : '', true, false).draw();
+                            });
+        
+                            column.data().unique().sort().each(function (d, j) {
+                                select.append('<option value="' + d + '">' + d + '</option>');
+                            });
+                        }
+                    });
+                },
           });
         });
         
     $("#add").validate();     
-    $("#edit").validate();    
+    $("#edit").validate();   
+    
+    $(function() {
+        var lastTab = localStorage.getItem('lastTab');
+        $('.tab-content').removeClass('hidden');
+        if (lastTab) {
+            $('[data-target="' + lastTab + '"]').tab('show');
+        }
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            localStorage.setItem('lastTab', $(this).data('target'));
+        });
+    });
 </script>
