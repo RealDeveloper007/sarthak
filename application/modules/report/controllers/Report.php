@@ -2092,7 +2092,7 @@ class Report extends My_Controller
 
                 }
 
-                // $this->resizeImage($class,$photo_path);
+                $this->resizeImage($class,$photo_path);
 
                 return $photo_path;
 
@@ -2106,8 +2106,8 @@ class Report extends My_Controller
              $config['new_image'] = $_SERVER['DOCUMENT_ROOT'] .'/assets/uploads/student-photo/'.$class.'/'. $filename;
              $config['create_thumb'] = FALSE;
              $config['maintain_ratio'] = FALSE;
-             $config['width']         = 444;
-             $config['height']       = 295;
+             $config['width']         = 152;
+             $config['height']       = 152;
  
              // print_r($config); die;
              $this->load->library('image_lib', $config);
