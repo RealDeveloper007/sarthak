@@ -85,7 +85,7 @@
 																	margin-bottom: 15px">
 
 										<div class="report_card_logo" style="position: absolute; left: 20px;">
-											<img style="width:127px" src="<?= base_url('assets/uploads/logo/' . $setting->front_logo) ?>">
+										<img style="width:127px" src="<?= base_url('assets/uploads/logo/' . $setting->front_logo) ?>">
 										</div>
 
 										<div class="report_card_details" style="width: 100%;text-align: center;">

@@ -1835,7 +1835,9 @@ class Report extends My_Controller
             $this->data['academic_year'] = $session_detail->session_year;
             $this->layout->title('All Students Result');
             $this->layout->view('importresult/viewstudents', $this->data);
+
         } else if ($this->session->userdata('role_id') == ADMIN) {
+            
             $ClassDropdown = $this->report->get_all_incharge_classes();
             // $user_detail = $this->report->get_userdetail($this->session->userdata('id'));
             $session_detail = $this->report->is_running_session();
@@ -1925,7 +1927,9 @@ class Report extends My_Controller
             }
         }
 
+        // echo $html;
 
+        // die;
 
         // $html = $this->load->view('aform_pdf', array('alldata' => $alldata), true);
 
@@ -1985,4 +1989,134 @@ class Report extends My_Controller
             redirect('report/viewstudents');
         }
     }
+
+    /*****************Function delete**********************************
+    * @type            : Function
+    * @function name   : delete
+    * @description     : delete "Teacher" data from database                  
+    *                    also unlink teacher profile photo & resume from server   
+    * @param           : $id integer value
+    * @return          : null 
+    * ********************************************************** */
+    public function deleteStudent($id = null) {
+
+        // check_permission(DELETE);
+
+        if(!is_numeric($id)){
+             error($this->lang->line('unexpected_error'));
+             redirect('report/viewstudents');       
+        }
+        
+        $StudentResult = $this->report->get_single('result_students', array('id' => $id));
+        if (!empty($StudentResult)) 
+        {
+
+            // delete student data
+            $this->report->delete('result_students', array('id' => $id));
+
+            // delete student result data
+            $this->report->delete('results', array('student_id' => $id));
+
+            create_log('Has been deleted a Result of student : '.$StudentResult->srn);
+            success($this->lang->line('delete_success'));
+        } else {
+            error($this->lang->line('delete_failed'));
+        }
+        redirect('report/viewstudents');
+    }
+
+    public function uploadImage()
+    {
+        if($_POST)
+        {
+            $data = $this->_get_posted_student_data();
+
+            $UpdateData['photo']   = $data['photo'];
+            $UpdateData['updated'] = date('Y-m-d H:i:s');
+
+            $updated = $this->report->update('result_students', $UpdateData, array('id' => $this->input->post('student_id')));
+
+                if ($updated) 
+                {                    
+                    create_log('Has been updated photo of a Student : '.$data['srn']);
+                    success($this->lang->line('update_success'));
+                } else {
+                    error($this->lang->line('update_failed'));
+                }
+
+                redirect('report/viewstudents/');
+
+
+        }
+
+    }
+
+    private function _get_posted_student_data() {
+
+        $data['srn']         = $this->input->post('srn');
+        $data['class']       = $this->input->post('class');
+        $data['student_id']  = $this->input->post('student_id');
+
+        // student  photo
+        if ($_FILES['photo']['name']) {
+            $data['photo'] = $this->_upload_photo($this->input->post('class'),$this->input->post('srn'));
+        }
+
+        return $data;
+    }
+
+    private function _upload_photo($class,$srn) 
+    {
+        // $prev_photo = $this->input->post('prev_photo');
+        $photo = $_FILES['photo']['name'];
+        $photo_type = $_FILES['photo']['type'];
+        $return_photo = '';
+
+            if ($photo_type == 'image/jpeg' || $photo_type == 'image/pjpeg' ||
+                    $photo_type == 'image/jpg' || $photo_type == 'image/png' ||
+                    $photo_type == 'image/x-png') 
+            {
+
+                $destination = 'assets/uploads/student-photo/class/'.$class.'/';
+
+                $file_type = explode(".", $photo);
+                $extension = strtolower($file_type[count($file_type) - 1]);
+                $photo_path = $srn.'-' . time() . '.' . $extension;
+
+                $UploadImage = move_uploaded_file($_FILES['photo']['tmp_name'], $destination . $photo_path);
+
+                if(!$UploadImage)
+                {
+                    error("Not uploaded because of error #".$_FILES["photo"]["error"]);
+                    redirect('report/viewstudents/');
+
+                }
+
+                // $this->resizeImage($class,$photo_path);
+
+                return $photo_path;
+
+            }
+    }
+
+    public function resizeImage($filename)
+    {
+             $config['image_library'] = 'gd2';
+             $config['source_image'] = $_SERVER['DOCUMENT_ROOT'] .'/assets/uploads/student-photo/'.$class.'/'. $filename;
+             $config['new_image'] = $_SERVER['DOCUMENT_ROOT'] .'/assets/uploads/student-photo/'.$class.'/'. $filename;
+             $config['create_thumb'] = FALSE;
+             $config['maintain_ratio'] = FALSE;
+             $config['width']         = 444;
+             $config['height']       = 295;
+ 
+             // print_r($config); die;
+             $this->load->library('image_lib', $config);
+ 
+             if ( ! $this->image_lib->resize())
+             {
+                     echo $this->image_lib->display_errors();
+             } 
+             // $this->image_lib->clear();
+     }
+
 }

@@ -149,8 +149,12 @@
 			<th colspan="2" align="left">SRN</th>
 			<td colspan="2" class="no-right-border"><strong><?= $student_info->srn ?></strong></td>
 			<td class="bottom right no-left-border" colspan="4" rowspan="7" align="right">
-				<img src="<?= FCPATH . "assets/images/profile.jpg" ?>" alt="Student Image" class="student-img">
-			</td>
+			<?php  if($student_info->photo == null) { ?>
+				<img src="<?= FCPATH . "assets/images/profile.jpg" ?>" alt="Student Image" class="student-img" >
+				<?php } else { ?>
+			<img src="<?= base_url('assets/uploads/student-photo/class/'.$student_info->class.'/'.$student_info->photo) ?>" alt="Student Image" class="student-img" >
+
+				<?php } ?>			</td>
 		</tr>
 		<?php if ($student_info->class == 11) {
 			$explode = explode('-', $student_info->section);

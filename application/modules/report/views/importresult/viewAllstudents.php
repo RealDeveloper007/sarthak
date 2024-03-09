@@ -100,7 +100,9 @@
                                                     <td><?php echo $obj->father_name; ?></td>
                                                     <td><?php echo $obj->mother_name; ?></td>
                                                     <td><?php echo $obj->status == 1 ? 'Approved' : 'Dis-Approved'; ?></td>
-                                                    <td> <a href="<?= site_url('report/DownloadReport/' . $obj->id) ?>" target="_blank" class="btn btn-success btn-xs" target="_blank"><i class="fa fa-eye"></i> <?php echo $this->lang->line('view'); ?> </a></td>
+                                                    <td> 
+                                                        <a href="<?= site_url('report/DownloadReport/' . $obj->id) ?>" target="_blank" class="btn btn-info btn-xs" target="_blank"><i class="fa fa-eye"></i> <?php echo $this->lang->line('view'); ?> </a>
+                                                </td>
                                                 </tr>
                                             <?php } ?>
                                         <?php } ?>
