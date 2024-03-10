@@ -1888,6 +1888,77 @@ class Report extends My_Controller
         }
     }
 
+    public function editStudentDetails($id=null)
+    {
+        if ($_POST) 
+        {
+            $this->_prepare_student_validation();
+            if ($this->form_validation->run() === TRUE) 
+            {
+                $data = $_POST;
+                $data['updated'] = date('Y-m-d H:i:s');
+
+                $updated = $this->report->update('result_students', $data, array('id' => $this->input->post('id')));
+
+                if ($updated) {
+                    
+                    create_log('Has been updated a Student  Details : '.$data['srn']);
+                    success($this->lang->line('update_success'));
+                    redirect('report/viewstudents');
+                } else {
+                    error($this->lang->line('update_failed'));
+                    redirect('report/editStudentDetails/' . $this->input->post('id'));
+                }
+            } else {
+
+                $this->session->set_flashdata('message', validation_errors());
+                redirect('report/viewstudents');
+
+            }
+        }
+
+        if ($id) 
+        {
+            $this->data['student'] = $this->report->get_student_info($id);
+
+            if (!$this->data['student']) {
+                redirect('report/viewstudents');
+            }
+        }
+
+        $user_detail = $this->report->get_userdetail($this->session->userdata('id'));
+        $session_detail = $this->report->is_running_session();
+        $this->data['userdetail'] = $user_detail;
+        $this->data['years'] = $this->Setting->get_list('academic_years', array('status' => 1), '', '', '', 'id', 'ASC');
+        $this->data['students']   = $this->report->get_student_details($user_detail->class_name, $user_detail->class_section, $session_detail->id);
+        $this->data['report_url'] = site_url('report/viewstudents');
+        $this->data['academic_year'] = $session_detail->session_year;
+
+        $this->data['edit'] = TRUE;
+        if (isset($this->data['student']->class)) 
+        {
+            $Class = $this->data['student']->class;
+            $this->layout->title('All Students Result');
+            $this->layout->view('importresult/viewstudents', $this->data);
+        }
+    }
+
+    private function _prepare_student_validation() {
+        $this->load->library('form_validation');
+        $this->form_validation->set_error_delimiters('<div class="error-message" style="color: red;">', '</div>');
+
+        $this->form_validation->set_rules('srn', 'SRN', 'trim|required');
+        $this->form_validation->set_rules('name', 'Name', 'trim|required');
+        $this->form_validation->set_rules('father_name', 'Father Name', 'trim|required');
+        $this->form_validation->set_rules('mother_name', 'Mother Name', 'trim|required');
+        $this->form_validation->set_rules('dob_main', $this->lang->line('birth_date'), 'trim|required');
+        $this->form_validation->set_rules('health_activity', 'Health Activity', 'trim|required');
+        $this->form_validation->set_rules('work_exp', 'Work Experience', 'trim|required');
+        $this->form_validation->set_rules('general_study', 'General Study', 'trim|required');
+        $this->form_validation->set_rules('discipline', 'Discipline', 'trim|required');
+    }
+
+
     public function DownloadReport($id)
     {
 
