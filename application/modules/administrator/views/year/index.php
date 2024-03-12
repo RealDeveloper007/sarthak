@@ -64,8 +64,8 @@
                                     <tr>
                                         <th><?php echo $this->lang->line('sl_no'); ?></th>
                                         <th><?php echo $this->lang->line('academic_year'); ?></th>
+                                        <th>Announce Date</th>
                                         <th><?php echo $this->lang->line('is_running'); ?></th>
-                                        <th><?php echo $this->lang->line('note'); ?></th>
                                         <th><?php echo $this->lang->line('action'); ?></th>                                            
                                     </tr>
                                 </thead>
@@ -75,8 +75,8 @@
                                         <tr>
                                             <td><?php echo $count++; ?></td>
                                             <td><?php echo ucfirst($obj->session_year); ?></td>
-                                            <td><?php echo $obj->is_running ? $this->lang->line('yes') : $this->lang->line('no'); ?></td>
                                             <td><?php echo $obj->note; ?></td>
+                                            <td><?php echo $obj->is_running ? $this->lang->line('yes') : $this->lang->line('no'); ?></td>
                                             <td>
                                                 <?php if(has_permission(EDIT, 'administrator', 'year')){ ?>
                                                     <a href="<?php echo site_url('administrator/year/edit/'.$obj->id); ?>" class="btn btn-info btn-xs"><i class="fa fa-pencil-square-o"></i> <?php echo $this->lang->line('edit'); ?> </a>
@@ -117,24 +117,24 @@
                                 </div>
                                 
                                 <div class="item form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="session_start"><?php echo $this->lang->line('session_start'); ?> <span class="required">*</span></label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="session_start"><?php echo 'Session Start'; ?> <span class="required">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input type="text"  class="form-control col-md-7 col-xs-12"  name="session_start"  id="add_session_start" value="<?php echo isset($session_start) ? $session_start : ''; ?>"  placeholder="<?php echo $this->lang->line('session_start'); ?>" required="required" autocomplete="off"/>
+                                        <input type="text"  class="form-control col-md-7 col-xs-12"  name="session_start"  id="add_session_start" value="<?php echo isset($session_start) ? $session_start : ''; ?>"  placeholder="<?php echo 'Session Start'; ?>" required="required" autocomplete="off"/>
                                         <div class="help-block"><?php echo form_error('session_start'); ?></div>
                                     </div>
                                 </div>
                                                               
                                 <div class="item form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="session_end"><?php echo $this->lang->line('session_end'); ?> <span class="required">*</span></label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="session_end"><?php echo 'Session End'; ?> <span class="required">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input type="text"  class="form-control col-md-7 col-xs-12"  name="session_end"  id="add_session_end" value="<?php echo isset($session_end) ? $session_end : ''; ?>"  placeholder="<?php echo $this->lang->line('session_end'); ?>" required="required" autocomplete="off"/>
+                                        <input type="text"  class="form-control col-md-7 col-xs-12"  name="session_end"  id="add_session_end" value="<?php echo isset($session_end) ? $session_end : ''; ?>"  placeholder="<?php echo 'Session End'; ?>" required="required" autocomplete="off"/>
                                         <div class="help-block"><?php echo form_error('session_end'); ?></div>
                                     </div>
                                 </div>
                                 <div class="item form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="note"><?php echo $this->lang->line('note'); ?></label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="note"><?php echo 'Announce Date'; ?></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <textarea  class="form-control col-md-7 col-xs-12"  name="note"  id="note" placeholder="<?php echo $this->lang->line('note'); ?>"><?php echo isset($note) ?  $note : ''; ?></textarea>
+                                        <input type="text"  class="form-control col-md-7 col-xs-12"  name="note"  id="note" placeholder="<?php echo 'Announce Date'; ?>" value="<?php echo isset($note) ?  $note : ''; ?>">
                                         <div class="help-block"><?php echo form_error('note'); ?></div>
                                     </div>
                                 </div>
@@ -162,24 +162,24 @@
                                 </div>
                                 
                                 <div class="item form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="session_start"><?php echo $this->lang->line('session_start'); ?> <span class="required">*</span></label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="session_start"><?php echo 'Session Start'; ?> <span class="required">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input type="text"  class="form-control col-md-7 col-xs-12"  name="session_start"  id="edit_session_start" value="<?php echo isset($session_start) ? $session_start : ''; ?>"  placeholder="<?php echo $this->lang->line('session_start'); ?>" required="required" autocomplete="off"/>
+                                        <input type="text"  class="form-control col-md-7 col-xs-12"  name="session_start"  id="edit_session_start" value="<?php echo isset($session_start) ? $session_start : ''; ?>"  placeholder="<?php echo 'Session Start'; ?>" required="required" autocomplete="off"/>
                                         <div class="help-block"><?php echo form_error('session_start'); ?></div>
                                     </div>
                                 </div>
                                                               
                                 <div class="item form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="session_end"><?php echo $this->lang->line('session_end'); ?> <span class="required">*</span></label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="session_end"><?php echo 'Session End'; ?> <span class="required">*</span></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input type="text"  class="form-control col-md-7 col-xs-12"  name="session_end"  id="edit_session_end" value="<?php echo isset($session_end) ? $session_end : ''; ?>"  placeholder="<?php echo $this->lang->line('session_end'); ?>" required="required" autocomplete="off"/>
+                                        <input type="text"  class="form-control col-md-7 col-xs-12"  name="session_end"  id="edit_session_end" value="<?php echo isset($session_end) ? $session_end : ''; ?>"  placeholder="<?php echo 'Session End'; ?>" required="required" autocomplete="off"/>
                                         <div class="help-block"><?php echo form_error('session_end'); ?></div>
                                     </div>
                                 </div>
                                 <div class="item form-group">
-                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="note"><?php echo $this->lang->line('note'); ?></label>
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="note"><?php echo 'Announce Date'; ?></label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <textarea  class="form-control col-md-7 col-xs-12"  name="note"  id="note" placeholder="<?php echo $this->lang->line('note'); ?>"><?php echo isset($year) ? $year->note : ''; ?></textarea>
+                                        <input type="text"  class="form-control col-md-7 col-xs-12"  name="note"  id="note" placeholder="<?php echo 'Announce Date'; ?>" value="<?php echo isset($year) ? $year->note : ''; ?>">
                                         <div class="help-block"><?php echo form_error('note'); ?></div>
                                     </div>
                                 </div>

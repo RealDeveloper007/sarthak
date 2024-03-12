@@ -56,10 +56,24 @@
                                             <div class="help-block"><?php echo form_error('school_code'); ?></div> 
                                         </div>
                                     </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <div class="item form-group">
+                                            <label for="affiliation_no"><?php echo 'Affiliation No'; ?></label>
+                                            <input  class="form-control col-md-7 col-xs-12"  name="affiliation_no"  id="affiliation_no" value="<?php echo isset($setting) ? $setting->affiliation_no : ''; ?>" placeholder="<?php echo 'Affiliation No'; ?>"  type="text" autocomplete="off">
+                                            <div class="help-block"><?php echo form_error('affiliation_no'); ?></div> 
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <div class="item form-group">
+                                            <label for="heading"><?php echo 'Report Heading'; ?></label>
+                                            <textarea  class="form-control col-md-7 col-xs-12"  name="heading"  id="heading"  placeholder="<?php echo 'Report Heading'; ?>"  autocomplete="off"><?php echo isset($setting) ? $setting->heading : ''; ?></textarea>
+                                            <div class="help-block"><?php echo form_error('heading'); ?></div> 
+                                        </div>
+                                    </div>
                                      <div class="col-md-3 col-sm-3 col-xs-12">
                                         <div class="item form-group">
                                             <label for="school_name"><?php echo $this->lang->line('school'); ?> <?php echo $this->lang->line('name'); ?> <span class="required">*</span></label>
-                                            <input  class="form-control col-md-7 col-xs-12"  name="school_name"  id="school_name" value="<?php echo isset($setting) ? $setting->school_name : ''; ?>" placeholder="<?php echo $this->lang->line('school'); ?> <?php echo $this->lang->line('name'); ?>" required="required" type="text" autocomplete="off">
+                                            <textarea  class="form-control col-md-7 col-xs-12"  name="school_name"  id="school_name" placeholder="<?php echo $this->lang->line('school'); ?> <?php echo $this->lang->line('name'); ?>" required="required" autocomplete="off"><?php echo isset($setting) ? $setting->school_name : ''; ?></textarea>
                                             <div class="help-block"><?php echo form_error('school_name'); ?></div> 
                                         </div>
                                     </div>
@@ -149,7 +163,23 @@
                                             <?php } ?>
                                             
                                         </div>
-                                    </div>                                   
+                                    </div>       
+                                    
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <div class="item form-group">
+                                            <label for="background_report_photo"> Background Report Photo <span style="font-size:10px;"> </span></label>
+                                            <div class="btn btn-default btn-file"><i class="fa fa-paperclip"></i> <?php echo $this->lang->line('upload'); ?>
+                                                <input  class="form-control col-md-7 col-xs-12"  name="background_report_photo" id="background_report_photo"  type="file">
+                                            </div>
+                                            <div class="help-block"><?php echo form_error('background_report_photo'); ?></div> 
+                                            
+                                            <?php if($setting->background_report_photo) { ?>
+                                               <img src="<?= base_url('/assets/images/'.$setting->background_report_photo); ?>" alt="" width="70" /><br/><br/>
+                                               <input name="background_report_photo_prev" value="<?php echo isset($setting) ? $setting->background_report_photo : ''; ?>"  type="hidden">
+                                            <?php } ?>
+                                            
+                                        </div>
+                                    </div>       
                                    
                                     <div class="col-md-3 col-sm-3 col-xs-12" >
                                         <div class="item form-group">
@@ -453,3 +483,8 @@
 
     $("#setting").validate();  
 </script>
+<style>
+    .form-group textarea {
+    height: 50px;
+}
+</style>

@@ -27,6 +27,7 @@ class Web extends CI_Controller
         $this->load->model('../modules/teacher/models/Teacher_Model', 'Teacher', true);
         $this->load->model('../modules/student/models/Student_Model', 'Student', true);
         $this->load->model('../modules/report/models/Report_Model', 'report', true);
+        $this->load->model('../modules/setting/models/Setting_Model', 'Setting', true);
 
         $this->data['settings'] = $this->web->get_single('settings', array('status' => 1));
         $this->data['theme'] = $this->web->get_single('themes', array('is_active' => 1));
@@ -103,7 +104,7 @@ class Web extends CI_Controller
     public function result()
     {
 
-        if ($this->session->userdata('student_result')) {
+        if ($this->session->userdata('student_info')) {
             redirect('get_result/');
         } else {
 
@@ -137,23 +138,11 @@ class Web extends CI_Controller
             $CheckResult = $this->report->get_result_check($this->input->post('srn'), $this->input->post('dob'));
 
             if (isset($CheckResult->id)) {
-                if ($CheckResult->status == 1) {
-                    $session_detail = $this->report->is_running_session();
+                if ($CheckResult->status == 1) 
+                {
                     $student_info = $this->report->get_student_info($CheckResult->id);
-                    $student_result   = $this->report->get_result_info($CheckResult->id);
-                    $academic_year = $session_detail->session_year;
-                    $principal_detail = $this->db->where('role_id', 2)->get('users')->row();
-                    $teacher_details = $this->report->get_class_incharge($student_info);
-                    $setting = $this->data['settings'];
-                    $report_year = $session_detail->start_year . '-' . $session_detail->end_year;
-
                     $this->session->set_userdata('student_info', $student_info);
-                    $this->session->set_userdata('student_result', $student_result);
-                    $this->session->set_userdata('academic_year', $academic_year);
-                    $this->session->set_userdata('principal_detail', $principal_detail);
-                    $this->session->set_userdata('teacher_details', $teacher_details);
-                    $this->session->set_userdata('setting', $setting);
-                    $this->session->set_userdata('report_year', $report_year);
+     
                 } else {
                     $this->session->set_flashdata('error', 'Sorry! your report card is not activated! Please contact to your Class Incharge.');
                 }
@@ -174,17 +163,14 @@ class Web extends CI_Controller
     {
         $this->layout->title($this->lang->line('result') . ' | ' . SMS);
 
-        if (!$this->session->userdata('student_result')) {
+        if (!$this->session->userdata('student_info')) {
             redirect('result/');
         } else {
 
-            $this->data['student_info'] = $this->session->userdata('student_info');
-            $this->data['student_result'] = $this->session->userdata('student_result');
-            $this->data['academic_year'] = $this->session->userdata('academic_year');
-            $this->data['principal_detail'] = $this->session->userdata('principal_detail');
-            $this->data['teacher_details'] = $this->session->userdata('teacher_details');
-            $this->data['setting'] = $this->session->userdata('setting');
-            $this->data['report_year'] = $this->session->userdata('report_year');
+            $studentInfo = $this->session->userdata('student_info');
+            $student_info = $this->report->get_student_info($studentInfo->id);
+            $this->data['student_info'] = $student_info;
+        
 
             $this->layout->view('student_result', $this->data);
         }
@@ -192,42 +178,44 @@ class Web extends CI_Controller
 
     public function print_report()
     {
+        $studentInfo = $this->session->userdata('student_info');
 
-        $this->data['student_info'] = $this->session->userdata('student_info');
-        $this->data['student_result'] = $this->session->userdata('student_result');
-        $this->data['academic_year'] = $this->session->userdata('academic_year');
-        $this->data['principal_detail'] = $this->session->userdata('principal_detail');
-        $this->data['teacher_details'] = $this->session->userdata('teacher_details');
-        $this->data['setting'] = $this->session->userdata('setting');
-        $this->data['report_year'] = $this->session->userdata('report_year');
-        // $this->data['user_detail'] = $user_detail;
+        $this->data['principal_detail'] = $this->db->where('role_id', 2)->get('users')->row();
+        $student_info = $this->report->get_student_info($studentInfo->id);
+        $this->data['student_info'] = $student_info;
+
+        $this->data['student_result']   = $this->report->get_result_info($studentInfo->id);
+
+        $this->data['teacher_details'] = $this->report->get_class_incharge($student_info);
+        $this->data['setting'] = $this->Setting->get_single('settings', array('status' => 1));
+        $session_detail = $this->report->get_single('academic_years', array('id' => $student_info->session_id));
+
+
+        $this->data['report_url'] = site_url('report/viewstudents');
+        $this->data['academic_year'] = $session_detail->session_year;
+        $this->data['announce_date'] = $session_detail->note;
+        $this->data['report_year'] = $session_detail->start_year . '-' . $session_detail->end_year;
+        $this->data['user_detail'] = $user_detail;
         $this->layout->title('Student Result');
 
         if (isset($this->data['student_info']->class)) {
             $Class = $this->data['student_info']->class;
 
             if ($Class == 9 || $Class == 8 || $Class == 7 || $Class == 6) {
-                $html = $this->load->view('downloadresult/9/studentresult', $this->data, true);
-            } else if ($Class ==5 || $Class ==4) {
-                 $html = $this->load->view('downloadresult/9/studentresult_primary', $this->data, true);
-               
+                $html = $this->load->view('../modules/report/views/downloadresult/9/studentresult', $this->data, true);
+                
+            }  else if ($Class == 5 || $Class == 4) {
+                
+                $html = $this->load->view('../modules/report/views/downloadresult/9/studentresult_primary', $this->data, true);
+
             } else if ($Class == 11) {
 
                 $Section = $this->data['student_info']->section;
                 $SplitSection = explode('-', $Section);
 
-                $html = $this->load->view('downloadresult/' . $Class . '/studentresult', $this->data, true);
+                $html = $this->load->view('../modules/report/views/downloadresult/' . $Class . '/studentresult', $this->data, true);
             }
         }
-
-
-
-        // $html = $this->load->view('aform_pdf', array('alldata' => $alldata), true);
-
-        // 		// Get output html
-
-        // 		$this->output->get_output();
-        // 		$html = $this->load->view('aform_pdf');
 
         // Load pdf library
         $this->load->library('pdf');

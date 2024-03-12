@@ -125,21 +125,21 @@
 			<th colspan="7" class="no-border" align="center">
 				<span> <?= implode(' ', array_slice(explode(' ', $setting->school_name), 0, 3)); ?></span>
 				<span> <?= implode(' ', array_slice(explode(' ', $setting->school_name), 3, 5)) ?></span>
-				<span>(A CBSE Affiliated Senior Secondary Co-Educational English Medium School)</span>
+				<span><?= $setting->heading ?></span>
 			</th>
 		</tr>
 		<tr>
-			<td colspan="4" align="right" class="no-border"><span>Affiliation No: 520109</span></td>
-			<td colspan="4" class="no-border"><span>School Code: 44085</span></td>
+			<td colspan="4" align="right" class="no-border"><span>Affiliation No: <?= $setting->affiliation_no ?></span></td>
+			<td colspan="4" class="no-border"><span>School Code: <?= $setting->school_code ?></span></td>
 		</tr>
 		<!-- Blank Row -->
 		<tr>
 			<td colspan="8" class="no-border"></td>
 		</tr>
 		<!-- Background Image -->
-		<img src="<?= FCPATH . 'assets/images/watermark.jpeg' ?>" alt="Watermark Image" class="watermark">
+		<img src="<?= FCPATH . 'assets/images/'.$setting->background_report_photo ?>" alt="Watermark Image" class="watermark">
 		<tr>
-			<th colspan="8" class="right pd-1" align="center">REPORT CARD (2022-2023)</th>
+			<th colspan="8" class="right pd-1" align="center">REPORT CARD (<?= $report_year ?>)</th>
 		</tr>
 		<tr>
 			<th colspan="8" align="left" class="right">Student Profile</th>
@@ -318,7 +318,7 @@
 			<td colspan="8" class="no-border">&nbsp;</td>
 		</tr>
 		<tr>
-			<th colspan="2" align="left" class="bottom">Date:&nbsp;27-03-2023</th>
+			<th colspan="2" align="left" class="bottom">Date:&nbsp;<?= $announce_date ?></th>
 			<th colspan="3" align="left" class="bottom">Class Teacher:&nbsp;<?= $teacher_details->name ?></th>
 			<th colspan="3" align="left" class="bottom right">Principal:&nbsp;<?= $principal_detail->name ?></th>
 		</tr>

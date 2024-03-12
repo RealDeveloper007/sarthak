@@ -118,7 +118,8 @@ class Setting extends MY_Controller {
                 }
             } else {
 
-                print_r(validation_errors()); die;
+                error(validation_errors());
+                redirect('setting/index');
             }
         }        
         
@@ -140,6 +141,9 @@ class Setting extends MY_Controller {
     private function _prepare_setting_validation() {
         $this->load->library('form_validation');
         $this->form_validation->set_error_delimiters('<div class="error-message" style="color: red;">', '</div>');
+        $this->form_validation->set_rules('school_code', $this->lang->line('school') . ' ' . $this->lang->line('code'), 'trim|required');
+        $this->form_validation->set_rules('affiliation_no', 'Affliation No', 'trim|required');
+        $this->form_validation->set_rules('heading', 'Report Card Heading', 'trim|required');
 
         $this->form_validation->set_rules('school_name', $this->lang->line('school') . ' ' . $this->lang->line('name'), 'trim|required');
         $this->form_validation->set_rules('address', $this->lang->line('address'), 'trim|required');
@@ -170,7 +174,9 @@ class Setting extends MY_Controller {
 
         $items = array();
         $items[] = 'school_code';
+        $items[] = 'affiliation_no';
         $items[] = 'school_name';
+        $items[] = 'heading';
         $items[] = 'address';
         $items[] = 'phone';
         $items[] = 'email';
@@ -222,6 +228,10 @@ class Setting extends MY_Controller {
         
         if ($_FILES['front_logo']['name']) {
             $data['front_logo'] = $this->_upload_front_logo();
+        }
+
+        if ($_FILES['background_report_photo']['name']) {
+            $data['background_report_photo'] = $this->_upload_background_report_photo();
         }
         
         if ($_FILES['brand_logo']['name']) {
@@ -277,6 +287,55 @@ class Setting extends MY_Controller {
                 $logo_path = time().'-logo.' . $extension;
 
                 copy($_FILES['logo']['tmp_name'], $destination . $logo_path);
+
+                if ($prevoius_logo != "") {
+                    // need to unlink previous image
+                    if (file_exists($destination . $prevoius_logo)) {
+                        @unlink($destination . $prevoius_logo);
+                    }
+                }
+
+                $logo = $logo_path;
+            }
+        } else {
+            $logo = $prevoius_logo;
+        }
+
+        return $logo;
+    }
+
+        /*****************Function _upload_background_report_photo**********************************
+    * @type            : Function
+    * @function name   : background_report_photo
+    * @description     : Process to upload institute front logo in the server                  
+    *                     and return logo name   
+    * @param           : null
+    * @return          : $logo string value 
+    * ********************************************************** */
+    private function _upload_background_report_photo() {
+
+        $prevoius_logo = @$_POST['background_report_photo_prev'];
+        $logo_name = $_FILES['background_report_photo']['name'];
+        $logo_type = $_FILES['background_report_photo']['type'];
+        $logo = '';
+
+        // print_r($_FILES); die;
+
+
+        if ($logo_name != "") {
+            if ($logo_type == 'image/jpeg' || $logo_type == 'image/pjpeg' ||
+                    $logo_type == 'image/jpg' || $logo_type == 'image/png' ||
+                    $logo_type == 'image/x-png' || $logo_type == 'image/gif') {
+
+                $destination = 'assets/images/';
+
+                $file_type = explode(".", $logo_name);
+                $extension = strtolower($file_type[count($file_type) - 1]);
+                $logo_path = time().'-report-photo.' . $extension;
+
+                copy($_FILES['background_report_photo']['tmp_name'], $destination . $logo_path);
+
+                // echo $_FILES['background_report_photo']['error']; die;
 
                 if ($prevoius_logo != "") {
                     // need to unlink previous image
