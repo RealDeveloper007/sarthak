@@ -1096,10 +1096,10 @@ class Report_Model extends MY_Model
 
 
 
-    public function get_result_check($srn, $dob)
+    public function get_result_check($year,$srn, $dob)
     {
 
-        $this->db->where(['srn' => $srn, 'dob' => $dob]);
+        $this->db->where(['srn' => $srn, 'dob' => $dob,'session_id'=>$year]);
 
         return $this->db->get('result_students')->row();
     }

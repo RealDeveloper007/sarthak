@@ -20,6 +20,10 @@
 										<div class="box-body" id='print-content' style="margin-top: -14px;">
 											<div class="row">
 												<div class="col-md-12">
+													<div class="item">
+														<h4>Session - <?= $report_year ?> </h4>
+														<br>
+													</div>
 													<div class="item form-group">
 														<label for="name">SRN <span class="required">*</span></label>
 														<input class="form-control col-md-7 col-xs-12" value="<?= $student_info->srn ?>" disabled>

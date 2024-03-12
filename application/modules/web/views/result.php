@@ -21,6 +21,15 @@
                         <p class="green"><?php echo $this->session->flashdata('success'); ?></p>
                     </div>
                     <?php echo form_open(site_url('check_result'), array('name' => 'login', 'id' => 'login'), ''); ?>
+                    <div class="text-center form-group has-feedback">
+                    <select  class="form-control has-feedback-left"  name="academic_year_id" >
+                                                <option value="">--<?php echo $this->lang->line('select'); ?> Session--</option>
+                                                <?php foreach($academic_years as $obj){ ?>
+                                                    <option value="<?php echo $obj->id; ?>"><?php echo $obj->session_year; ?></option>
+                                                <?php } ?>
+                                            </select>
+                    </div>
+
                     <div class="text-center">
                         <input type="text" name="srn" class="form-control has-feedback-left" placeholder="SRN">
                     </div>
@@ -66,6 +75,12 @@ section.login_content form input.login-button {
 p.red {
     color: red;
     font-size: 20px;
+}
+
+.form-control {
+    color: #000;
+    font-size: 13px;
+    height: 50px;
 }
 
 </style>

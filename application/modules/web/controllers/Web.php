@@ -109,6 +109,8 @@ class Web extends CI_Controller
         } else {
 
             $this->data['list'] = TRUE;
+            $this->data['academic_years'] = $this->report->get_list('academic_years',array('status' => 1));
+
             $this->layout->title($this->lang->line('result') . ' | ' . SMS);
             $this->layout->view('result', $this->data);
         }
@@ -130,12 +132,13 @@ class Web extends CI_Controller
 
         $this->load->library('form_validation');
         $this->form_validation->set_error_delimiters('<div class="error-message" style="color: red;">', '</div>');
+        $this->form_validation->set_rules('academic_year_id', 'Session', 'trim|required');
         $this->form_validation->set_rules('srn', 'SRN', 'trim|required');
         $this->form_validation->set_rules('dob', 'PASSWORD', 'trim|required');
 
         if ($this->form_validation->run() === TRUE) {
 
-            $CheckResult = $this->report->get_result_check($this->input->post('srn'), $this->input->post('dob'));
+            $CheckResult = $this->report->get_result_check($this->input->post('academic_year_id'),$this->input->post('srn'), $this->input->post('dob'));
 
             if (isset($CheckResult->id)) {
                 if ($CheckResult->status == 1) 
@@ -169,9 +172,12 @@ class Web extends CI_Controller
 
             $studentInfo = $this->session->userdata('student_info');
             $student_info = $this->report->get_student_info($studentInfo->id);
+            $session_detail = $this->report->get_single('academic_years', array('id' => $student_info->session_id));
+
+            
+            $this->data['report_year'] = $session_detail->start_year . '-' . $session_detail->end_year;
             $this->data['student_info'] = $student_info;
         
-
             $this->layout->view('student_result', $this->data);
         }
     }
