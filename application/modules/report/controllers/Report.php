@@ -2131,7 +2131,7 @@ class Report extends My_Controller
 
                         $data[$this->input->post('type')] = $this->input->post('value'); 
                         $data['total']                    = $TotalMarks;
-                        // $data['updated'] = date('Y-m-d H:i:s');
+                        $data['updated'] = date('Y-m-d H:i:s');
 
                         $updated = $this->report->update('results', $data, array('id' => $this->input->post('id')));
 
