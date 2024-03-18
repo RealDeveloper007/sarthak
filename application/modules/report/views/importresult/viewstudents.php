@@ -80,7 +80,9 @@
                                                     <td>
                                                         <a href="<?= site_url('report/editStudentDetails/' . $obj->id) ?>" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i> Edit </a>
 
-                                                        <a href="<?= site_url('report/DownloadReport/' . $obj->id) ?>" target="_blank" class="btn btn-info btn-xs"><i class="fa fa-eye"></i> <?php echo $this->lang->line('view'); ?> </a>
+                                                        <a href="<?= site_url('report/viewStudentResultDetails/' . $obj->id) ?>" target="_blank" class="btn btn-info btn-xs"><i class="fa fa-eye"></i> <?php echo $this->lang->line('view'); ?> </a>
+
+                                                        <a href="<?= site_url('report/DownloadReport/' . $obj->id) ?>" target="_blank" class="btn btn-success btn-xs"><i class="fa fa-download"></i> <?php echo $this->lang->line('download'); ?> </a>
 
                                                         <a href="<?= site_url('report/deleteStudent/' . $obj->id) ?>" class="btn btn-success btn-xs" onclick="return confirm('Are you sure to delete the record of this Student SR No. - <?php echo $obj->srn; ?>?')"><i class="fa fa-trash"></i> <?php echo $this->lang->line('delete'); ?> </a>
                                                     </td>

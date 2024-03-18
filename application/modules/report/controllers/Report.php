@@ -1959,6 +1959,85 @@ class Report extends My_Controller
     }
 
 
+    public function viewStudentResultDetails($id)
+    {
+
+        $user_detail = $this->report->get_userdetail($this->session->userdata('id'));
+
+        $this->data['principal_detail'] = $this->db->where('role_id', 2)->get('users')->row();
+        $student_info = $this->report->get_student_info($id);
+        $this->data['student_info'] = $student_info;
+
+
+        if(isset($student_info->id))
+        {
+            
+            if(trim($student_info->class) != trim($user_detail->class_name))
+            {
+                $this->session->set_flashdata('message', 'Sorry! Your class & student class is not matched');
+                redirect('report/viewstudents');
+    
+            }
+            
+            if(trim($student_info->section) != trim($user_detail->class_section))
+            {
+                $this->session->set_flashdata('message', 'Sorry! Your class section & student class section is not matched');
+                redirect('report/viewstudents');
+    
+            } 
+
+            if($student_info->academic_years_id != $user_detail->session_id) 
+            {
+                $this->session->set_flashdata('message', 'Sorry! You are not authorized to access this student details');
+                redirect('report/viewstudents');
+    
+            }
+            
+                $this->data['student_result']   = $this->report->get_result_info($id);
+
+                $this->data['teacher_details'] = $this->report->get_class_incharge($student_info);
+                $this->data['setting'] = $this->Setting->get_single('settings', array('status' => 1));
+                $session_detail = $this->report->get_single('academic_years', array('id' => $student_info->session_id));
+
+
+                $this->data['report_url'] = site_url('report/viewstudents');
+                $this->data['academic_year'] = $session_detail->session_year;
+                $this->data['announce_date'] = $session_detail->note;
+                $this->data['report_year'] = $session_detail->start_year . '-' . $session_detail->end_year;
+                $this->data['user_detail'] = $user_detail;
+                $this->data['style'] = 'width: 50%;margin: 0px auto;';
+
+                $this->layout->title('Student Result');
+
+                $Class = $this->data['student_info']->class;
+
+                if ($Class == 9 || $Class == 8 || $Class == 7 || $Class == 6) {
+                    
+                    echo $this->load->view('downloadresult/9/studentresult', $this->data, true);
+                    
+                }  else if ($Class == 5 || $Class == 4) {
+                    
+                    echo $this->load->view('downloadresult/9/studentresult_primary', $this->data, true);
+
+                } else if ($Class == 11) {
+
+                    $Section = $this->data['student_info']->section;
+                    $SplitSection = explode('-', $Section);
+
+                    echo  $this->load->view('downloadresult/' . $Class . '/studentresult', $this->data, true);
+                }
+
+        } else {
+
+
+            $this->session->set_flashdata('message', 'Sorry! details are not found');
+            redirect('report/viewstudents');
+
+        }
+
+    }
+
+
     public function DownloadReport($id)
     {
 
@@ -1979,6 +2058,7 @@ class Report extends My_Controller
         $this->data['announce_date'] = $session_detail->note;
         $this->data['report_year'] = $session_detail->start_year . '-' . $session_detail->end_year;
         $this->data['user_detail'] = $user_detail;
+        $this->data['style'] = '';
         $this->layout->title('Student Result');
 
         if (isset($this->data['student_info']->class)) {
@@ -2000,17 +2080,6 @@ class Report extends My_Controller
             }
         }
 
-        // echo $html;
-
-        // die;
-
-        // $html = $this->load->view('aform_pdf', array('alldata' => $alldata), true);
-
-        // 		// Get output html
-
-        // 		$this->output->get_output();
-        // 		$html = $this->load->view('aform_pdf');
-
         // Load pdf library
         $this->load->library('pdf');
 
@@ -2030,6 +2099,63 @@ class Report extends My_Controller
         // $pdf = $this->dompdf->output();
         $file_location = FCPATH . "uploads/aforms/" . $pdfname;
         file_put_contents($file_location, $pdf);
+    }
+
+    public function update_subject_marks()
+    {
+
+        $this->load->library('form_validation');
+        $this->form_validation->set_error_delimiters('<div class="error-message" style="color: red;">', '</div>');
+
+        $this->form_validation->set_rules('type', 'Type', 'trim|required');
+        $this->form_validation->set_rules('id', 'ID', 'trim|required');
+
+        if ($this->form_validation->run() === TRUE) 
+            {
+
+                $SubjectMarks = $this->report->get_single('results', array('id' => $this->input->post('id')));
+
+                if(isset($SubjectMarks->id))
+                {
+
+                        if($this->input->post('type') == 'in_term_total')
+                        {
+                            $TotalMarks = $this->input->post('value') + $SubjectMarks->th_term_total;
+
+                        } else {
+
+                            $TotalMarks = $this->input->post('value') + $SubjectMarks->in_term_total;
+
+                        }
+
+
+                        $data[$this->input->post('type')] = $this->input->post('value'); 
+                        $data['total']                    = $TotalMarks;
+                        // $data['updated'] = date('Y-m-d H:i:s');
+
+                        $updated = $this->report->update('results', $data, array('id' => $this->input->post('id')));
+
+                        if ($updated) 
+                        {
+                            echo json_encode(['status'=>true,"message"=>'Updated result marks']);
+
+                        } else {
+                            
+                            echo json_encode(['status'=>false,"message"=>'Result marks not updated']);
+
+                        }
+
+                 } else {
+
+                            echo json_encode(['status'=>false,"message"=>'Result marks not updated. Due to some error!']);
+                }
+            } else {
+
+                echo json_encode(['status'=>false,"message"=>validation_errors()]);
+
+            }
+        
+
     }
 
 

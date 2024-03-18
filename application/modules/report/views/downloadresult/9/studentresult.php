@@ -21,12 +21,14 @@
 			height: 80px;
 			width: 63px;
 		}
+		</style>
+		<?php if($style) { ?>
+		<style>
 
 		.watermark {
 			position: absolute;
-			top: 10.6%;
 			width: 100%;
-			height: 880px;
+			height: 100%;
 			opacity: .13;
 			object-fit: cover;
 			z-index: -1;
@@ -39,10 +41,39 @@
 			border: 1px solid black;
 			object-fit: cover;
 			z-index: 2;
-			position: absolute;
-			right:5px;
 		}
+		</style>
+		<?php } else { ?>
 
+			<style>
+
+		.watermark {
+			position: absolute;
+			top: 10.6%;
+			width: 100%;
+			height: 880px;
+			opacity: .13;
+			object-fit: cover;
+			z-index: -1;
+		}
+		.student-img {
+			display: block;
+			height: 152px;
+			width: 152px;
+			border: 1px solid black;
+			object-fit: cover;
+			z-index: 2;
+			position: absolute;
+			right: 5px;
+		}
+		</style>
+
+
+			<?php } ?>
+	<style>
+			input {
+		width: 50px;
+		}
 		table th span {
 			display: block;
 			color: #71879b;
@@ -105,21 +136,23 @@
 		.signature {
 			height: 63px;
 		}
-		.vertical span{
-			position:absolute;
-			top:0;
-			right:0;
-			width:1px;
-			height:24px;
-			background-color:black;
+
+		.vertical span {
+			position: absolute;
+			top: 0;
+			right: 0;
+			width: 1px;
+			height: 24px;
+			background-color: black;
 		}
+		
 	</style>
 </head>
 
 <body>
-	<table cellspacing="0" cellpadding="5">
+<table cellspacing="0" cellpadding="5" style="<?= $style ?>">
 		<tr>
-			<th align="left" class="no-border"><img src="<?= FCPATH . 'assets/uploads/logo/' . $setting->front_logo ?>" alt="Logo" class="logo"></th>
+		<th align="left" class="no-border"><img src="<?= base_url('assets/uploads/logo/' . $setting->front_logo) ?>" alt="Logo" class="logo"></th>
 			<th colspan="7" class="no-border" align="center" >
 				<span> <?= implode(' ', array_slice(explode(' ', $setting->school_name), 0, 3)); ?></span>
 				<span> <?= implode(' ', array_slice(explode(' ', $setting->school_name), 3, 5)) ?></span>
@@ -135,7 +168,7 @@
 			<td colspan="8" class="no-border"></td>
 		</tr>
 			<!-- Background Image -->
-			<img src="<?= FCPATH . 'assets/images/'.$setting->background_report_photo ?>" alt="Watermark Image" class="watermark">
+			<img src="<?= base_url('assets/images/'.$setting->background_report_photo) ?>" alt="Watermark Image" class="watermark">
 		<tr>
 		<th colspan="8" class="right pd-1" align="center">REPORT CARD (<?= $report_year ?>)</th>
 		</tr>
@@ -147,7 +180,7 @@
 			<td colspan="2" class="no-right-border"><strong><?= $student_info->srn ?></strong></td>
 			<td class="bottom right no-left-border" colspan="4" rowspan="7" align="right" >
 				<?php  if($student_info->photo == null) { ?>
-				<img src="<?= FCPATH . "assets/images/profile.jpg" ?>" alt="Student Image" class="student-img" >
+					<img src="<?= base_url("assets/images/profile.jpg") ?>" alt="Student Image" class="student-img" >
 				<?php } else { ?>
 			<img src="<?= base_url('assets/uploads/student-photo/class/'.$student_info->class.'/'.$student_info->photo) ?>" alt="Student Image" class="student-img" >
 
@@ -224,45 +257,67 @@
 									} else {
 										echo str_replace('-',' ',$obj->subject_name) . $status;
 									} ?></th>
-				<th align="center" ><?php if ($obj->subject_name == "IT" || $obj->subject_name == "B&W" || $obj->subject_name == "Comp.Application") { ?>
-						50
-					<?php } else if (strtolower($obj->subject_name) == "home.sc.") { ?>
-						70
-					<?php } else if ($obj->subject_name == "Painting") { ?>
-						30
-					<?php } else { ?>
-						80
-					<?php } ?></th>
-				<th align="center" ><?= floor($obj->th_term_total) ?></th>
-				<th align="center" ><?php if ($obj->subject_name == "IT" || $obj->subject_name == "B&W" || $obj->subject_name == "Comp.Application") { ?>
-						50
-					<?php } else if (strtolower($obj->subject_name) == "home.sc.") { ?>
-						30
-					<?php } else if ($obj->subject_name == "Painting") { ?>
-						70
-					<?php } else { ?>
-						20
-					<?php } ?></th>
-				<th align="center" ><?= floor($obj->in_term_total) ?></th>
+				<th align="center" >
+					<?php 
+					if ($obj->subject_name == "IT" || $obj->subject_name == "B&W" || $obj->subject_name == "Comp.Application") {  	$thTotal = 50; 
+					} else if (strtolower($obj->subject_name) == "home.sc.") { 
+						$thTotal = 70;
+					} else if ($obj->subject_name == "Painting") { 
+						$thTotal = 30;
+					} else { 
+						$thTotal = 80;
+					} 
+					echo $thTotal;
+					?>
+				</th>
+				<?php if($style){ ?>
+					<th align="center" style="display: block ruby;">
+
+						<input type="text" id="th_term_<?= $obj->id ?>" name="th_term_total" value="<?= floor($obj->th_term_total) ?>"> 
+						<button data-id="<?= $obj->id ?>" data-type="th_term_total" data-total="<?= $thTotal ?>" data-obt="<?= (int)$obj->th_term_total ?>">Update</button>
+				</th>
+				<?php } else { ?>
+					<th align="center" ><?= floor($obj->th_term_total) ?></th>
+				<?php } ?>
+				<th align="center" >
+				<?php if ($obj->subject_name == "IT" || $obj->subject_name == "B&W" || $obj->subject_name == "Comp.Application") { 
+					$inTotal = 50;
+				 } else if (strtolower($obj->subject_name) == "home.sc.") { 
+					$inTotal = 30;
+				 } else if ($obj->subject_name == "Painting") { 
+					$inTotal = 70;
+				 } else { 
+					$inTotal = 20;
+				  } 
+				  echo $inTotal;
+				  ?>
+				  </th>
+				  <?php if($style){ ?>
+					<th align="center" style="display: block ruby;">
+					<input type="text" id="in_term_<?= $obj->id ?>" name="in_term_total" value="<?= floor($obj->in_term_total) ?>"> 
+					<button data-id="<?= $obj->id ?>" data-type="in_term_total" data-total="<?= $inTotal ?>" data-obt="<?= (int)$obj->in_term_total ?>">Update</button>
+				</th>
+				<?php } else { ?>
+
+					<th align="center">
+						<?= floor($obj->in_term_total) ?>
+					</th>
+
+				<?php } ?>
+
 				<th align="center" >100</th>
 				<th align="center" class="right"><?=  $obj->total != 0 ? floor($obj->total) : '-' ?></th>
 			</tr>
 		<?php 		$CalculateArray[] = $obj->total;
-		            
         			    
         			     if ($obj->optional_status == 1) 
     		            {
     		            	$ob = $ob + $obj->total;
     				        $tt = $tt + 100;
     		            } 
-        			
-			
-		            
-		            
-			
 		} 
 		
-		 if($student_info->class <9)
+		 if($student_info->class < 9)
         			{
         			    $Cal = sort($CalculateArray,SORT_NUMERIC);
         			    $Cal = array_shift($CalculateArray);
@@ -279,10 +334,7 @@
 			<th class="right" align="center"><?= $student_info->result_status == 'P' ?  floor($ObMarks) : '-' ?></th>
 		</tr>
 		<tr>
-			<th align="left" class="bottom nowrap">Percentage 
-		
-			
-			</th>
+			<th align="left" class="bottom nowrap">Percentage </th>
 			<th class="bottom right" align="center"><?= $student_info->result_status == 'P' ? round(($ObMarks * 100) / $tt, 2).'%' : '-' ?></th>
 		</tr>
 		<!-- Blank Row -->
@@ -341,5 +393,74 @@
 	</table>
 
 </body>
+<?php if($style){ ?>
+
+<script src="<?= base_url('assets/js/jquery-1.11.2.min.js') ?>"></script>
+
+<script>
+
+$('input').keyup(function(e)
+                                {
+  if (/\D/g.test(this.value))
+  {
+    // Filter non-digits from input value.
+    this.value = this.value.replace(/\D/g, '');
+  }
+});
+
+
+$('button').on('click',function() {
+
+var type 	= $(this).attr('data-type');
+var id   	= $(this).attr('data-id');
+var obt     = $(this).attr('data-obt');
+var total   = $(this).attr('data-total');
+
+if(type == 'th_term_total')
+{
+	var value   = $('#th_term_'+id).val();
+
+} else {
+
+	var value   = $('#in_term_'+id).val();
+
+}
+
+if(parseInt(value) > parseInt(total))
+{
+	if(type == 'th_term_total')
+	{
+		$('#th_term_'+id).val(obt);
+
+	} else {
+
+		$('#in_term_'+id).val(obt);
+
+	}
+	
+	alert('Sorry! marks must be not be greater than total');
+
+} else {
+
+$.ajax({       
+	  type   	: "POST",
+	  url    	: "<?php echo site_url('report/update_subject_marks'); ?>",
+	  data   	: {type : type,id:id,value:value},  
+	  dataType  : 'json',
+	  success: function(response)
+	  {                                                   
+		 if(response.status)
+		 {
+			alert(response.message);
+			location.reload();
+		 } else {
+			alert(response.message);
+		 }
+	  }
+   });
+}
+})
+</script>
+<?php } ?>
 
 </html>
