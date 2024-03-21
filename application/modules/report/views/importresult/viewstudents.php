@@ -28,14 +28,28 @@
                     </ul>
                     <br />
 
-                    <?php if (isset($errors)) { ?>
+                    <?php if($this->session->flashdata('message')) { ?>
 
-                        <!-- <div class="alert alert-danger" style="color: white!important;"><?php // $errors; 
-                                                                                                ?></div> -->
+                        <div class="alert alert-danger"><?= $this->session->flashdata('message'); 
+                                                                                                ?></div>
+                        
                     <?php } ?>
 
 
                     <div class="tab-content">
+
+                    <form action="<?= site_url('report/delete_all_students') ?>" method="post" class="row">
+                        <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="item form-group">
+                                <select name="status_code" class="form-control">
+                                    <option value="1">Bulk Delete</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" name="submit" class="btn btn-success" onclick="return confirm('Are you sure to delete the students？')">Submit</button>
+                        </div>
+
 
                         <div class="tab-pane fade in <?php if (!isset($edit)) {
                                                             echo 'active';
@@ -44,6 +58,7 @@
                                 <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                                     <thead>
                                         <tr>
+                                            <th><input type="checkbox" name="select_all" class="select_all" id="checkedAll"></th>
                                             <th><?php echo $this->lang->line('sl_no'); ?></th>
                                             <th>Image</th>
                                             <th>SRN No.</th>
@@ -59,6 +74,10 @@
                                         if (isset($students) && !empty($students)) { ?>
                                             <?php foreach ($students as $obj) { ?>
                                                 <tr>
+                                                <td>
+                                                    <!-- <input type="hidden" name="student_ids[]" value="<?= $obj->id ?>"> -->
+                                                        <input type="checkbox" name="student_ids[<?= $obj->id ?>]" class="checkSingle" value="<?= $obj->id ?>">
+                                                    </td>
                                                     <td><?php echo $count++; ?></td>
                                                     <td><?php 
                                                      if($obj->photo == null)
@@ -95,6 +114,7 @@
                                 </table>
                             </div>
                         </div>
+                        </form>
 
                         <?php if(isset($edit)){ ?>
                         
@@ -371,6 +391,42 @@
             readURL(this);
         });
    });
+   $('#select_class').on('change', function() {
+        window.location.href = "<?= base_url('report/viewstudents?class=') ?>" + encodeURIComponent(this.value);
+    })
+    $('#reset_filter').on('click', function() {
+        window.location.href = "<?= base_url('report/viewstudents') ?>";
+    })
+
+    $(document).ready(function() {
+        $("#checkedAll").change(function() {
+            if (this.checked) {
+                $(".checkSingle").each(function() {
+                    this.checked = true;
+                });
+            } else {
+                $(".checkSingle").each(function() {
+                    this.checked = false;
+                });
+            }
+        });
+
+        $(".checkSingle").click(function() {
+            if ($(this).is(":checked")) {
+                var isAllChecked = 0;
+                $(".checkSingle").each(function() {
+                    if (!this.checked)
+                        isAllChecked = 1;
+                });
+
+                if (isAllChecked == 0) {
+                    $("#checkedAll").prop("checked", true);
+                }
+            } else {
+                $("#checkedAll").prop("checked", false);
+            }
+        });
+    });
 </script>
 <style>
     input[type="file"] {

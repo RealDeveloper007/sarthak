@@ -20,13 +20,12 @@
 
                     </ul>
                     <br />
+                    <?php if($this->session->flashdata('message')) { ?>
 
-                    <?php if (isset($errors)) { ?>
+                        <div class="alert alert-danger"><?= $this->session->flashdata('message'); 
+                                                                        ?></div>
 
-                        <!-- <div class="alert alert-danger" style="color: white!important;"><?php // $errors; 
-                                                                                                ?></div> -->
                     <?php } ?>
-
 
                     <div class="tab-content">
                         <div class="row">

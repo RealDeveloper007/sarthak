@@ -1147,8 +1147,6 @@ class Report extends My_Controller
                                         $insertData['session_id']  = $sessionId;
 
 
-
-
                                         if ($query->num_rows() == 0) {
                                             $this->db->insert('result_students', $insertData);
                                             $InsertId = $this->db->insert_id();
@@ -1278,10 +1276,6 @@ class Report extends My_Controller
                                             $subjectCode = isset($SubjectCodes[1]) ? $SubjectCodes[1] : '';
                                             $SubCode = preg_replace("/[^0-9]/", "",  $subjectCode);
 
-                                            // echo $SubCode;
-
-                                            // echo $subjectName; die;
-
                                             $query = $this->db->where('session_id', $sessionId)
                                                 ->where('class', $class)
                                                 ->where('section', $section)
@@ -1364,17 +1358,11 @@ class Report extends My_Controller
                                                 $insert_result['total']         = $key['AM'];
                                             }
 
-
-
                                             if ($query->num_rows() == 0) {
 
                                                 $this->db->insert('results', $insert_result);
                                             } else {
                                                 $res_detail = $query->row();
-
-                                                //  print_r($insert_result); 
-
-                                                //  print_r($res_detail);
 
                                                 $this->db->where('id', $res_detail->id)->update('results', $insert_result);
                                             }
@@ -1563,29 +1551,42 @@ class Report extends My_Controller
                                                     $insert_result['optional_status'] = 1;
                                                 } elseif ($key1 == 1) {
                                                     
-                                                    //  $SCodes = explode(' ', $key['N']);
-                                                    // $sName = isset($SCodes[0]) ? $SCodes[0] : '';
-                                                    // $sCode = isset($SCodes[1]) ? $SCodes[1] : '';
-                                                    // $SubCode = preg_replace("/[^0-9]/", "",  $sCode);
+                                                     $SCodes = explode(' ', $key['N']);
+                                                    $sName = isset($SCodes[0]) ? $SCodes[0] : '';
+                                                    $sCode = isset($SCodes[1]) ? $SCodes[1] : '';
+                                                    $SubCode = preg_replace("/[^0-9]/", "",  $sCode);
 
-                                                    // $query = $this->db->where('session_id', $sessionId)
-                                                    //     ->where('class', $class)
-                                                    //     ->where('section', $section)
-                                                    //     ->where('student_id', $InsertId)
-                                                    //     ->where('subject_name', $sName)
-                                                    //     ->get('results');
-                                                    // $insert_result['subject_name']  = $sName;
-                                                    // $insert_result['subject_code'] = $SubCode;
-                                                    // $insert_result['term_one']      = $key['O'];
+                                                    if($user_detail->fixed_subject == 1)
+                                                    {
+                                                        $query = $this->db->where('session_id', $sessionId)
+                                                            ->where('class', $class)
+                                                            ->where('section', $section)
+                                                            ->where('student_id', $InsertId)
+                                                            ->where('subject_name', $sName)
+                                                            ->get('results');
+                                                        $insert_result['subject_name']  = $sName;
+                                                        $insert_result['subject_code']  = $SubCode;
+                                                        $insert_result['term_one']      = $key['O'];
                                                     
-                                                    $insert_result['subject_name'] = $subjectName;
-                                                    $insert_result['subject_code'] = $SubCode;
-                                                    $insert_result['term_one']      = $key['N'];
-                                                    $insert_result['term_two']      = $key['O'];
-                                                    $insert_result['th_term_total'] = $key['P'];
-                                                    $insert_result['in_term_total'] = $key['Q'];
-                                                    $insert_result['total']         = $key['R'];
-                                                    $insert_result['optional_status'] = 1;
+                                                        $insert_result['term_two']      = $key['O'];
+                                                        $insert_result['th_term_total'] = $key['P'];
+                                                        $insert_result['in_term_total'] = $key['Q'];
+                                                        $insert_result['total']         = $key['R'];
+                                                        $insert_result['optional_status'] = 1;
+
+                                                    } else {
+
+                                                        $insert_result['subject_name']  = $subjectName;
+                                                        $insert_result['subject_code']  = $SubCode;
+                                                        $insert_result['term_one']      = $key['N'];
+
+                                                        $insert_result['term_two']      = $key['O'];
+                                                        $insert_result['th_term_total'] = $key['P'];
+                                                        $insert_result['in_term_total'] = $key['Q'];
+                                                        $insert_result['total']         = $key['R'];
+                                                        $insert_result['optional_status'] = 1;
+                                                    }
+
                                                 } elseif ($key1 == 2) {
 
                                                     $SCodes = explode(' ', $key['S']);
@@ -2222,6 +2223,40 @@ class Report extends My_Controller
             error($this->lang->line('delete_failed'));
         }
         redirect('report/viewstudents');
+    }
+
+    public function delete_all_students()
+    {
+        $this->load->library('form_validation');
+        $this->form_validation->set_error_delimiters('<div class="error-message" style="color: white;">', '</div>');
+
+        $this->form_validation->set_rules('status_code', 'Please select bulk delete', 'trim|required');
+        $this->form_validation->set_rules('student_ids[]', 'Please select any student', 'trim|required');
+
+        if ($this->form_validation->run() === TRUE) 
+            {
+                $studentIds = array_keys($_POST['student_ids']);
+
+                for($i=0;$i<count($studentIds);$i++)
+                {
+                        // delete student data
+                    $this->report->delete('result_students', array('id' => $studentIds[$i]));
+
+                    // delete student result data
+                    $this->report->delete('results', array('student_id' => $studentIds[$i]));
+                }
+              
+                create_log('Has been deleted a Result of student : '.$StudentResult->srn);
+                success($this->lang->line('delete_success'));
+                redirect('report/viewstudents');
+
+            } else {
+
+                $this->session->set_flashdata('message', validation_errors());
+                redirect('report/viewstudents');
+
+            }
+
     }
 
     public function uploadImage()
