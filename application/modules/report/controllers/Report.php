@@ -1697,14 +1697,51 @@ class Report extends My_Controller
                                                     $insert_result['total']         = $key['M'];
                                                     $insert_result['optional_status'] = 1;
                                                 } elseif ($key1 == 1) {
-                                                    $insert_result['subject_name'] = $subjectName;
-                                                    $insert_result['subject_code'] = $SubCode;
-                                                    $insert_result['term_one']      = $key['N'];
-                                                    $insert_result['term_two']      = $key['O'];
-                                                    $insert_result['th_term_total'] = $key['P'];
-                                                    $insert_result['in_term_total'] = $key['Q'];
-                                                    $insert_result['total']         = $key['R'];
-                                                    $insert_result['optional_status'] = 1;
+                                                    // $insert_result['subject_name'] = $subjectName;
+                                                    // $insert_result['subject_code'] = $SubCode;
+                                                    // $insert_result['term_one']      = $key['N'];
+                                                    // $insert_result['term_two']      = $key['O'];
+                                                    // $insert_result['th_term_total'] = $key['P'];
+                                                    // $insert_result['in_term_total'] = $key['Q'];
+                                                    // $insert_result['total']         = $key['R'];
+                                                    // $insert_result['optional_status'] = 1;
+
+                                                    $SCodes = explode(' ', $key['N']);
+                                                    $sName = isset($SCodes[0]) ? $SCodes[0] : '';
+                                                    $sCode = isset($SCodes[1]) ? $SCodes[1] : '';
+                                                    $SubCode = preg_replace("/[^0-9]/", "",  $sCode);
+
+                                                    if($user_detail->fixed_subject == 1)
+                                                    {
+                                                        $query = $this->db->where('session_id', $sessionId)
+                                                            ->where('class', $class)
+                                                            ->where('section', $section)
+                                                            ->where('student_id', $InsertId)
+                                                            ->where('subject_name', $sName)
+                                                            ->get('results');
+                                                        $insert_result['subject_name']  = $sName;
+                                                        $insert_result['subject_code']  = $SubCode;
+                                                        $insert_result['term_one']      = $key['O'];
+                                                    
+                                                        $insert_result['term_two']      = $key['O'];
+                                                        $insert_result['th_term_total'] = $key['P'];
+                                                        $insert_result['in_term_total'] = $key['Q'];
+                                                        $insert_result['total']         = $key['R'];
+                                                        $insert_result['optional_status'] = 1;
+
+                                                    } else {
+
+                                                        $insert_result['subject_name']  = $subjectName;
+                                                        $insert_result['subject_code']  = $SubCode;
+                                                        $insert_result['term_one']      = $key['N'];
+
+                                                        $insert_result['term_two']      = $key['O'];
+                                                        $insert_result['th_term_total'] = $key['P'];
+                                                        $insert_result['in_term_total'] = $key['Q'];
+                                                        $insert_result['total']         = $key['R'];
+                                                        $insert_result['optional_status'] = 1;
+                                                    }
+                                                    
                                                 } elseif ($key1 == 2) {
                                                     $insert_result['subject_name'] = $subjectName;
                                                     $insert_result['subject_code'] = $SubCode;

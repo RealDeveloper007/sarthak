@@ -178,15 +178,15 @@
                                             <div class="help-block"><?php echo form_error('email'); ?></div>
                                         </div>
                                     </div> 
-                                    <?php if($profile->class_name == 11) { ?>
+                                    <?php  if($profile->class_name == 11 && (trim($section) == 'Arts' || trim($section) =='Commerce')) { ?>
                                     <div class="col-md-3 col-sm-3 col-xs-12">
                                         <div class="item form-group">
                                             <label for="fixed_subject">Fixed Subject <span class="required">*</span></label>
                                             
-                                            first Subject
+                                            <a href="javascript::void(0)" id="first_subject" data-toggle="modal" data-target="#myModal">only first Subject</a>
                                             <input   name="fixed_subject" value="1"  required="required" type="radio" <?= $profile->fixed_subject == 1 ? 'checked' : ''; ?>>
                                             
-                                            first & second subject
+                                            <a href="javascript::void(0)" id="first_second_subject" data-toggle="modal" data-target="#myModal1">only first & second subject</a>
                                             <input   name="fixed_subject" value="2"  required="required" type="radio" <?= $profile->fixed_subject == 2 ? 'checked' : ''; ?>>
                                             <div class="help-block"><?php echo form_error('fixed_subject'); ?></div> 
                                         </div>
@@ -232,6 +232,49 @@
             </div>
         </div>
     </div>
+</div>
+
+<!-- Trigger the modal with a button -->
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Preview Example</h4>
+      </div>
+      <div class="modal-body">
+        <img src="<?= base_url('assets/images/Fixed1st_subject.png') ?>" width="100%;">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- Modal -->
+<div id="myModal1" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Preview Example</h4>
+      </div>
+      <div class="modal-body">
+        <img src="<?= base_url('assets/images/Fixed_1st&2nd_subject.png') ?>" width="100%;">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
 </div>
 
   <!-- bootstrap-datetimepicker -->

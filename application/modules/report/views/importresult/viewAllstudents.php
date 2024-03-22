@@ -76,6 +76,7 @@
                                     <thead>
                                         <tr>
                                             <th><input type="checkbox" name="select_all" class="select_all" id="checkedAll"></th>
+                                            <th>#SL</th>
                                             <th>SRN No.</th>
                                             <th>DOB (use as password)</th>
                                             <th>Name</th>
@@ -93,6 +94,7 @@
                                                     <td><input type="hidden" name="student_ids[]" value="<?= $obj->id ?>">
                                                         <input type="checkbox" name="student_status[<?= $obj->id ?>]" class="checkSingle" value="<?= $obj->id ?>">
                                                     </td>
+                                                    <td><?php echo $count; ?></td>
                                                     <td><?php echo $obj->srn; ?></td>
                                                     <td><?php echo $obj->dob; ?></td>
                                                     <td><?php echo $obj->name; ?></td>
@@ -103,7 +105,7 @@
                                                         <a href="<?= site_url('report/DownloadReport/' . $obj->id) ?>" target="_blank" class="btn btn-info btn-xs" target="_blank"><i class="fa fa-eye"></i> <?php echo $this->lang->line('view'); ?> </a>
                                                 </td>
                                                 </tr>
-                                            <?php } ?>
+                                            <?php $count++; } ?>
                                         <?php } ?>
                                     </tbody>
                                 </table>

@@ -66,7 +66,7 @@ class Profile extends My_Controller {
             $this->data['class_id'] = $this->data['profile']->class_id;
             $this->data['section_id'] = $this->data['profile']->section_id;
             $this->data['student_id'] = $profile_id;
-
+            
             $this->data['exams'] = $this->profile->get_list('exams', array('status' => 1, 'academic_year_id' => $this->academic_year_id), '', '', '', 'id', 'ASC');
            // $this->data['types'] = $this->profile->get_list('student_types', array('status' => 1), '', '', '', 'id', 'ASC');
            // $this->data['groups'] = $this->profile->get_list('student_groups', array('status' => 1), '', '', '', 'id', 'ASC');
@@ -80,6 +80,8 @@ class Profile extends My_Controller {
             $this->layout->view('profile/guardian', $this->data);
             
         } elseif ($role_id == TEACHER || $role_id == ADMIN) {
+            $Section = explode('-',$this->data['profile']->class_section);
+            $this->data['section'] = isset($Section[0]) ? $Section[0] : '';
             $this->layout->view('profile/teacher', $this->data);
         } else {
             $this->layout->view('profile/employee', $this->data);

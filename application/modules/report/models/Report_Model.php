@@ -1055,6 +1055,7 @@ class Report_Model extends MY_Model
 
     public function get_all_incharge_classes()
     {
+        $this->db->distinct();
         $this->db->select('U.class_name,U.class_section');
         $this->db->from('users AS U');
         $this->db->join('academic_years AS A', 'A.id =U.academic_years_id', 'left');
