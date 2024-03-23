@@ -1901,7 +1901,7 @@ class Report extends My_Controller
 
         $this->data['student_result']   = $this->report->get_result_info($id);
 
-        $this->data['teacher_details'] = $this->report->get_class_incharge($this->data['student_info']);
+        $this->data['teacher_details'] = $this->report->get_class_incharge($this->data['student_info'],$session_detail->id);
         $this->data['setting'] = $this->Setting->get_single('settings', array('status' => 1));
 
 
@@ -2033,7 +2033,7 @@ class Report extends My_Controller
             
                 $this->data['student_result']   = $this->report->get_result_info($id);
 
-                $this->data['teacher_details'] = $this->report->get_class_incharge($student_info);
+                $this->data['teacher_details'] = $this->report->get_class_incharge($student_info,$student_info->academic_years_id);
                 $this->data['setting'] = $this->Setting->get_single('settings', array('status' => 1));
                 $session_detail = $this->report->get_single('academic_years', array('id' => $student_info->session_id));
 
@@ -2085,14 +2085,13 @@ class Report extends My_Controller
         $this->data['student_info'] = $student_info;
 
         $this->data['student_result']   = $this->report->get_result_info($id);
-
-        $this->data['teacher_details'] = $this->report->get_class_incharge($student_info);
         $this->data['setting'] = $this->Setting->get_single('settings', array('status' => 1));
         $session_detail = $this->report->get_single('academic_years', array('id' => $student_info->session_id));
 
 
         $this->data['report_url'] = site_url('report/viewstudents');
         $this->data['academic_year'] = $session_detail->session_year;
+        $this->data['teacher_details'] = $this->report->get_class_incharge($student_info,$student_info->session_id);
         $this->data['announce_date'] = $session_detail->note;
         $this->data['report_year'] = $session_detail->start_year . '-' . $session_detail->end_year;
         $this->data['user_detail'] = $user_detail;

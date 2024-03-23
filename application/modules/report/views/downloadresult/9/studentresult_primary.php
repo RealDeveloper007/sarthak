@@ -143,7 +143,7 @@
 			right: 0;
 			width: 1px;
 			height: 24px;
-			background-color: black;
+			/* background-color: black; */
 		}
 		
 	</style>

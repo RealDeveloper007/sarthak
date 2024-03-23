@@ -143,8 +143,16 @@ class Web extends CI_Controller
             if (isset($CheckResult->id)) {
                 if ($CheckResult->status == 1) 
                 {
-                    $student_info = $this->report->get_student_info($CheckResult->id);
-                    $this->session->set_userdata('student_info', $student_info);
+                    if($CheckResult->remarks == 'RLA')
+                    {
+                        $this->session->set_flashdata('error', 'Sorry! your report card is not activated! Please contact to your Class Incharge.');
+
+                    } else {
+
+                        $student_info = $this->report->get_student_info($CheckResult->id);
+                        $this->session->set_userdata('student_info', $student_info);
+                    }
+
      
                 } else {
                     $this->session->set_flashdata('error', 'Sorry! your report card is not activated! Please contact to your Class Incharge.');
@@ -192,7 +200,7 @@ class Web extends CI_Controller
 
         $this->data['student_result']   = $this->report->get_result_info($studentInfo->id);
 
-        $this->data['teacher_details'] = $this->report->get_class_incharge($student_info);
+        $this->data['teacher_details'] = $this->report->get_class_incharge($student_info,$student_info->session_id);
         $this->data['setting'] = $this->Setting->get_single('settings', array('status' => 1));
         $session_detail = $this->report->get_single('academic_years', array('id' => $student_info->session_id));
 

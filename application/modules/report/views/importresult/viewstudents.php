@@ -18,7 +18,7 @@
                         <?php if(isset($edit)){ ?>
                             <li class=''><a href="#tab_student_view" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-eye"></i> Class: <?= $userdetail->class_name ?>-<?= $userdetail->class_section ?></a> </li>
 
-                            <li  class="active"><a href="#tab_edit_student" data-target="#tab_edit_student" role="tab"  data-toggle="tab" aria-expanded="false"><i class="fa fa-pencil-square-o"></i> <?php echo $this->lang->line('edit'); ?> <?php echo $this->lang->line('student'); ?></a> </li>                          
+                            <li class="active"><a href="#tab_edit_student" data-target="#tab_edit_student" role="tab"  data-toggle="tab" aria-expanded="false"><i class="fa fa-pencil-square-o"></i> <?php echo $this->lang->line('edit'); ?> <?php echo $this->lang->line('student'); ?></a> </li>                          
                         <?php } else { ?>
                             <li class='active'><a href="#tab_student_view" role="tab" data-toggle="tab" aria-expanded="true"><i class="fa fa-eye"></i> Class: <?= $userdetail->class_name ?>-<?= $userdetail->class_section ?></a> </li>
 
@@ -38,7 +38,8 @@
 
                     <div class="tab-content">
 
-                    <form action="<?= site_url('report/delete_all_students') ?>" method="post" class="row">
+            <div class="tab-pane fade in <?php if (!isset($edit)) { echo 'active'; } ?>" id="tab_student_view">
+                <form action="<?= site_url('report/delete_all_students') ?>" method="post" class="row">
                         <div class="col-md-4 col-sm-4 col-xs-4">
                             <div class="item form-group">
                                 <select name="status_code" class="form-control">
@@ -50,10 +51,6 @@
                             <button type="submit" name="submit" class="btn btn-success" onclick="return confirm('Are you sure to delete the students？')">Submit</button>
                         </div>
 
-
-                        <div class="tab-pane fade in <?php if (!isset($edit)) {
-                                                            echo 'active';
-                                                        } ?>" id="tab_student_view">
                             <div class="x_content">
                                 <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                                     <thead>
@@ -115,6 +112,7 @@
                             </div>
                         </div>
                         </form>
+
 
                         <?php if(isset($edit)){ ?>
                         

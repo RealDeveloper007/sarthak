@@ -1105,10 +1105,10 @@ class Report_Model extends MY_Model
         return $this->db->get('result_students')->row();
     }
 
-    public function get_class_incharge($data)
+    public function get_class_incharge($data,$year)
     {
 
-        $this->db->where(['class_name' => $data->class, 'class_section' => $data->section]);
+        $this->db->where(['class_name' => $data->class, 'class_section' => $data->section,'academic_years_id'=>$year]);
 
         return $this->db->get('users')->row();
     }
