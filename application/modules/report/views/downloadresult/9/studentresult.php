@@ -37,7 +37,7 @@
 		.student-img {
 			display: block;
 			height: 152px;
-			width: 152px;
+			width: auto;
 			border: 1px solid black;
 			object-fit: cover;
 			z-index: 2;
