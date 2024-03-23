@@ -164,7 +164,10 @@
                                     </div>
                                 </div>
                                <div class="row">
-                                    <div class="col-md-2 col-sm-2 col-xs-12">
+                                  
+                                    <?php  if($profile->class_name == 11 && (trim($section) == 'Arts' || trim($section) =='Commerce')) { ?>
+                                    
+                                        <div class="col-md-2 col-sm-2 col-xs-12">
                                         <div class="item form-group">
                                             <label for="name"><?php echo $this->lang->line('name'); ?> <span class="required">*</span></label>
                                             <input  class="form-control col-md-7 col-xs-12"  name="name"  id="name" value="<?php echo isset($profile->name) ?  $profile->name : ''; ?>" placeholder="<?php echo $this->lang->line('name'); ?>" required="required" type="text">
@@ -178,7 +181,7 @@
                                             <div class="help-block"><?php echo form_error('email'); ?></div>
                                         </div>
                                     </div> 
-                                    <?php  if($profile->class_name == 11 && (trim($section) == 'Arts' || trim($section) =='Commerce')) { ?>
+
                                     <div class="col-md-3 col-sm-3 col-xs-12">
                                         <div class="item form-group">
                                             <label for="fixed_subject">Fixed Subject <span class="required">*</span></label>
@@ -191,8 +194,7 @@
                                             <div class="help-block"><?php echo form_error('fixed_subject'); ?></div> 
                                         </div>
                                     </div>
-                                    <?php } ?>
-                                     <div class="col-md-2 col-sm-2 col-xs-12">
+                                    <div class="col-md-2 col-sm-2 col-xs-12">
                                         <div class="item form-group">
                                             <label for="signature">Signature  <span class="required">*</span></label>                                           
                                             <div class="btn btn-default btn-file">
@@ -203,7 +205,8 @@
                                             <div class="help-block"><?php echo form_error('signature'); ?></div>
                                         </div>
                                     </div>  
-                                     <div class="col-md-3 col-sm-3 col-xs-12">
+
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
                                         <div class="item form-group">
                                             <input type="hidden" name="prev_signature" id="prev_signature" value="<?php echo $profile->signature; ?>" />
                                             <?php if($profile->signature){ ?>
@@ -211,6 +214,51 @@
                                             <?php } ?>
                                         </div>
                                     </div>
+
+                                    <?php } else { ?>
+
+
+                                        <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <div class="item form-group">
+                                            <label for="name"><?php echo $this->lang->line('name'); ?> <span class="required">*</span></label>
+                                            <input  class="form-control col-md-7 col-xs-12"  name="name"  id="name" value="<?php echo isset($profile->name) ?  $profile->name : ''; ?>" placeholder="<?php echo $this->lang->line('name'); ?>" required="required" type="text">
+                                            <div class="help-block"><?php echo form_error('name'); ?></div> 
+                                        </div>
+                                    </div>
+                                     <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <div class="item form-group">
+                                            <label for="email"><?php echo $this->lang->line('email'); ?> <span class="required">*</span></label>
+                                            <input  class="form-control col-md-7 col-xs-12"  name="email"  readonly="readonly"  id="email" value="<?php echo isset($profile->email) ?  $profile->email : ''; ?>" placeholder="<?php echo $this->lang->line('email'); ?>" required="email" type="email" autocomplete="off">
+                                            <div class="help-block"><?php echo form_error('email'); ?></div>
+                                        </div>
+                                    </div> 
+
+                                    
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <div class="item form-group">
+                                            <label for="signature">Signature  <span class="required">*</span></label>                                           
+                                            <div class="btn btn-default btn-file">
+                                                <i class="fa fa-paperclip"></i> <?php echo $this->lang->line('upload'); ?>
+                                                <input  class="form-control col-md-7 col-xs-12"  name="signature"  id="signature" type="file">
+                                            </div>
+                                            <div class="text-info"><?php echo $this->lang->line('valid_file_format_img'); ?></div>
+                                            <div class="help-block"><?php echo form_error('signature'); ?></div>
+                                        </div>
+                                    </div>  
+
+                                    <div class="col-md-3 col-sm-3 col-xs-12">
+                                        <div class="item form-group">
+                                            <input type="hidden" name="prev_signature" id="prev_signature" value="<?php echo $profile->signature; ?>" />
+                                            <?php if($profile->signature){ ?>
+                                            <img src="<?php echo UPLOAD_PATH; ?>/teacher-sign/<?php echo $profile->signature; ?>" alt="" width="150" /><br/><br/>
+                                            <?php } ?>
+                                        </div>
+                                    </div>
+
+
+                                    <?php } ?>
+                                     
+                                    
                                 
                                </div>
 
