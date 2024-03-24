@@ -452,6 +452,57 @@ class Teacher extends MY_Controller {
         redirect('teacher');
     }
 
+    public function action_all_teachers()
+    {
+        $this->load->library('form_validation');
+        $this->form_validation->set_error_delimiters('<div class="error-message" style="color: white;">', '</div>');
+
+        $this->form_validation->set_rules('status_code', 'Please select status', 'trim|required');
+        $this->form_validation->set_rules('teacher_ids[]', 'Please select any teacher', 'trim|required');
+
+        if ($this->form_validation->run() === TRUE) 
+            {
+                $teacherIds = array_keys($_POST['teacher_ids']);
+
+                for($i=0;$i<count($teacherIds);$i++)
+                {
+                    if($_POST['status_code'] == 1)
+                    {
+                        // update teachers data
+                        $data['status'] = 0;
+        
+                        $this->teacher->update('users',$data, array('id' => $teacherIds[$i]));
+                        success('Selected Incharges IN-Activated successfully');
+
+
+                    } else if($_POST['status_code'] == 2) {
+
+                         // update teachers data
+                         $data['status'] = 1;
+        
+                         $this->teacher->update('users',$data, array('id' => $teacherIds[$i]));
+                         success('Selected Incharges Activated successfully');
+
+                    } else {
+                        
+                        // delete teacher  data
+                        $this->teacher->delete('users', array('id' => $teacherIds[$i]));
+                        success('Selected Incharges Deleted successfully');
+                    }
+                }
+              
+                redirect('teacher');
+
+            } else {
+
+                $this->session->set_flashdata('message', validation_errors());
+                redirect('teacher');
+
+            }
+
+    }
+
+
 
     public function importIncharges()
     {

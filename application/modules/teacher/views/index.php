@@ -43,15 +43,17 @@
                     </ul>
                     <br/>
 
-                    <?php if(isset($errors)){ ?>
+                    <?php if($this->session->flashdata('message')) { ?>
 
-                        <!-- <div class="alert alert-danger" style="color: white!important;"><?php // $errors; ?></div> -->
+                        <div class="alert alert-danger"><?= $this->session->flashdata('message'); 
+                                                                        ?></div>
+
                     <?php } ?>
-
     
                     <div class="tab-content">
                         <div  class="tab-pane fade in <?php if(isset($list)){ echo 'active'; }?>" id="tab_teacher_list" >
                             <div class="x_content">
+                          
                             <table id="datatable-responsive" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
@@ -71,6 +73,7 @@
                                     <?php  $count = 1; if(isset($teachers) && !empty($teachers)){ ?>
                                         <?php foreach($teachers as $obj){ ?>
                                         <tr>
+                                        
                                             <td><?php echo $count++; ?></td>
                                             <td><?php echo $obj->type;?></td>
                                             <td><?php echo $obj->teacher_code; ?></td>
@@ -445,9 +448,23 @@
 
                         <div  class="tab-pane fade in <?php if(isset($inchargelist)){ echo 'active'; }?>" id="tab_teacher_view" >
                             <div class="x_content">
+                            <form action="<?= site_url('teacher/action_all_teachers') ?>" method="post" class="row">
+                            <div class="col-md-4 col-sm-4 col-xs-4">
+                            <div class="item form-group">
+                                <select name="status_code" class="form-control">
+                                    <option value="1">Bulk In-Active</option>
+                                    <option value="2">Bulk Active</option>
+                                    <option value="3">Bulk Delete</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <button type="submit" name="submit" class="btn btn-success" onclick="return confirm('Are you sure to apply action on selected incharges.')">Submit</button>
+                        </div>
                             <table id="inchargelist_datable" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
+                                    <th><input type="checkbox" name="select_all" class="select_all" id="checkedAll"></th>
                                         <th><?php echo $this->lang->line('sl_no'); ?></th>
                                         <th>Academic Year</th>
                                         <th>Name</th>
@@ -462,6 +479,9 @@
                                     <?php  $count = 1; if(isset($incharge_list) && !empty($incharge_list)){ ?>
                                         <?php foreach($incharge_list as $obj){ ?>
                                         <tr>
+                                        <td>
+                                            <input type="checkbox" name="teacher_ids[<?= $obj->id ?>]" class="checkSingle" value="<?= $obj->id ?>">
+                                                    </td>
                                             <td><?php echo $count++; ?></td>
                                             <td><?php echo $obj->session_year;?></td>
                                             <td><?php echo $obj->name;?></td>
@@ -474,6 +494,8 @@
                                     <?php } ?>
                                 </tbody>
                             </table>
+                            </form>
+
                             </div>
                         </div> 
                  
@@ -561,10 +583,10 @@
               ],
               search: true,
               initComplete: function () {
-                    this.api().columns([1,6]).every(function (ind) {
+                    this.api().columns([2,5,6,7]).every(function (ind) {
                         var column = this;
                         if(ind != 0) {
-                            var select = $('<select class="form-control custom-cls"><option value="">All</option></select>').appendTo($(column.header()).empty()).on('change', function () {
+                            var select = $('<select class="form-control custom-cls"><option value="">Filter</option></select>').appendTo($(column.header()).empty()).on('change', function () {
                                 var val = $.fn.dataTable.util.escapeRegex($(this).val());
                                 column.search(val ? '^' + val + '$' : '', true, false).draw();
                             });
@@ -589,6 +611,36 @@
         }
         $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
             localStorage.setItem('lastTab', $(this).data('target'));
+        });
+    });
+
+    $(document).ready(function() {
+        $("#checkedAll").change(function() {
+            if (this.checked) {
+                $(".checkSingle").each(function() {
+                    this.checked = true;
+                });
+            } else {
+                $(".checkSingle").each(function() {
+                    this.checked = false;
+                });
+            }
+        });
+
+        $(".checkSingle").click(function() {
+            if ($(this).is(":checked")) {
+                var isAllChecked = 0;
+                $(".checkSingle").each(function() {
+                    if (!this.checked)
+                        isAllChecked = 1;
+                });
+
+                if (isAllChecked == 0) {
+                    $("#checkedAll").prop("checked", true);
+                }
+            } else {
+                $("#checkedAll").prop("checked", false);
+            }
         });
     });
 </script>
