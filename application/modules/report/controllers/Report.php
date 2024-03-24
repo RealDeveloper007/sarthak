@@ -1706,13 +1706,14 @@ class Report extends My_Controller
                                                     // $insert_result['total']         = $key['R'];
                                                     // $insert_result['optional_status'] = 1;
 
-                                                    $SCodes = explode(' ', $key['N']);
-                                                    $sName = isset($SCodes[0]) ? $SCodes[0] : '';
-                                                    $sCode = isset($SCodes[1]) ? $SCodes[1] : '';
-                                                    $SubCode = preg_replace("/[^0-9]/", "",  $sCode);
-
+                                                   
                                                     if($user_detail->fixed_subject == 1)
                                                     {
+                                                        $SCodes = explode(' ', $key['N']);
+                                                        $sName = isset($SCodes[0]) ? $SCodes[0] : '';
+                                                        $sCode = isset($SCodes[1]) ? $SCodes[1] : '';
+                                                        $SubCode = preg_replace("/[^0-9]/", "",  $sCode);
+
                                                         $query = $this->db->where('session_id', $sessionId)
                                                             ->where('class', $class)
                                                             ->where('section', $section)

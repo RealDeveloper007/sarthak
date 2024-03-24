@@ -210,7 +210,33 @@
                                             <div class="help-block"><?php echo form_error('academic_year_id'); ?></div>
                                         </div>
                                     </div>
+                                    <div class="col-md-4 col-sm-3 col-xs-12">
+                                        <div class="item form-group">
+                                            <label for="remarks">Remarks <span class="required">*</span></label>
+                                            <input  class="form-control"  name="remarks" value="<?= $student->remarks ?>" required>
+                                               
+                                            <div class="help-block"><?php echo form_error('remarks'); ?></div>
+                                        </div>
                                     </div>
+                                    <div class="col-md-1 col-sm-3 col-xs-12">
+                                        <div class="item form-group">
+                                            <label for="remarks">Result <span class="required">*</span></label>
+                                            <select  class="form-control col-md-7 col-xs-12"  name="result_status" required>
+                                            <option value="P" <?= $student->result_status=='P' ? 'selected' : '' ?>>P</option>
+                                            <option value="C" <?= $student->result_status=='C' ? 'selected' : '' ?>>C</option>
+                                            <option value="F" <?= $student->result_status=='F' ? 'selected' : '' ?>>F</option>
+                                            <option value="RLA" <?= $student->result_status=='RLA' ? 'selected' : '' ?>>RLA</option>
+
+                                            </select>
+                                               
+                                            <div class="help-block"><?php echo form_error('result_status'); ?></div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                    </div>
+
+                               
+
                                 <div class="row">                  
                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                         <h5  class="column-title"><strong><?php echo $this->lang->line('academic'); ?> <?php echo $this->lang->line('information'); ?>:</strong></h5>
