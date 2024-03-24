@@ -2034,7 +2034,7 @@ class Report extends My_Controller
             
                 $this->data['student_result']   = $this->report->get_result_info($id);
 
-                $this->data['teacher_details'] = $this->report->get_class_incharge($student_info,$student_info->academic_years_id);
+                $this->data['teacher_details'] = $this->report->get_class_incharge($student_info,$student_info->session_id);
                 $this->data['setting'] = $this->Setting->get_single('settings', array('status' => 1));
                 $session_detail = $this->report->get_single('academic_years', array('id' => $student_info->session_id));
 

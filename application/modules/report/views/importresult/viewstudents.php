@@ -118,7 +118,7 @@
                         
                         <div class="tab-pane fade in active" id="tab_edit_student">
                             <div class="x_content"> 
-                            <?php echo form_open_multipart(site_url('report/editStudentDetails/'), array('name' => 'editstudent', 'id' => 'editstudent', 'class'=>'form-horizontal form-label-left'), ''); ?>
+                            <?php echo form_open_multipart(site_url('report/editStudentDetails/'.$student->id), array('name' => 'editstudent', 'id' => 'editstudent', 'class'=>'form-horizontal form-label-left'), ''); ?>
                                 <div class="row">                  
                                     <div class="col-md-12 col-sm-12 col-xs-12">
                                         <h5  class="column-title"><strong><?php echo $this->lang->line('basic'); ?> <?php echo $this->lang->line('information'); ?>:</strong></h5>
