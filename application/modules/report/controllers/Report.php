@@ -1374,12 +1374,13 @@ class Report extends My_Controller
                                 redirect('report/importresult');
                             }
                         } elseif ($class == 11) {
+                            // print_r($allDataInSheet[4]); die;
                             $sub1 = $subjects['I'];
                             $sub2 = $subjects['N'];
                             $sub3 = $subjects['S'];
                             $sub4 = $subjects['X'];
                             $sub5 = $subjects['AC'];
-                            unset($allDataInSheet[4]);
+                            unset($allDataInSheet[0]);
                             if ($user_detail->class_name == $class) {
                                 $explode_section = explode('-', $section);
                                 $subject_Array = array($sub1, $sub2, $sub3, $sub4, $sub5);
@@ -2099,7 +2100,8 @@ class Report extends My_Controller
         $this->data['style'] = '';
         $this->layout->title('Student Result');
 
-        if (isset($this->data['student_info']->class)) {
+        if (isset($this->data['student_info']->class)) 
+        {
             $Class = $this->data['student_info']->class;
 
             if ($Class == 9 || $Class == 8 || $Class == 7 || $Class == 6) {
