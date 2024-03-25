@@ -59,6 +59,7 @@
                                             <th><?php echo $this->lang->line('sl_no'); ?></th>
                                             <th>Image</th>
                                             <th>SRN No.</th>
+                                            <th>DOB (use as password)</th>
                                             <th>Name</th>
                                             <th>Father`s Name</th>
                                             <th>Mother</th>
@@ -89,6 +90,7 @@
                                                          
                                                     </td>
                                                     <td><?php echo $obj->srn; ?></td>
+                                                    <td><?php echo $obj->dob; ?></td>
                                                     <td><?php echo $obj->name; ?></td>
                                                     <td><?php echo $obj->father_name; ?></td>
                                                     <td><?php echo $obj->mother_name; ?></td>

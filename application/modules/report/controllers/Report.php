@@ -1932,9 +1932,13 @@ class Report extends My_Controller
     {
         if ($_POST) 
         {
+            $id = $this->input->post('id');
+
             $this->_prepare_student_validation();
             if ($this->form_validation->run() === TRUE) 
             {
+                $this->validateAccessPage($id);
+
                 $data = $_POST;
                 $data['updated'] = date('Y-m-d H:i:s');
 
@@ -1959,6 +1963,8 @@ class Report extends My_Controller
 
         if ($id) 
         {
+            $this->validateAccessPage($id);
+
             $this->data['student'] = $this->report->get_student_info($id);
 
             if (!$this->data['student']) {
@@ -1981,6 +1987,46 @@ class Report extends My_Controller
             $this->layout->title('All Students Result');
             $this->layout->view('importresult/viewstudents', $this->data);
         }
+    }
+
+    private function validateAccessPage($id)
+    {
+        $user_detail = $this->report->get_userdetail($this->session->userdata('id'));
+        $student_info = $this->report->get_student_info($id);
+
+        // principal login
+        if($this->session->userdata('role_id') == 2)
+        {
+            return true;
+
+        } else {
+
+            if(isset($student_info->id))
+            {
+                
+                if(trim($student_info->class) != trim($user_detail->class_name))
+                {
+                    $this->session->set_flashdata('message', 'Sorry! Your class & student class is not matched');
+                    redirect('report/viewstudents');
+        
+                }
+                
+                if(trim($student_info->section) != trim($user_detail->class_section))
+                {
+                    $this->session->set_flashdata('message', 'Sorry! Your class section & student class section is not matched');
+                    redirect('report/viewstudents');
+        
+                } 
+
+                if($student_info->academic_years_id != $user_detail->session_id) 
+                {
+                    $this->session->set_flashdata('message', 'Sorry! You are not authorized to access this student details');
+                    redirect('report/viewstudents');
+        
+                }
+            }
+        }
+
     }
 
     private function _prepare_student_validation() {
@@ -2011,28 +2057,8 @@ class Report extends My_Controller
 
         if(isset($student_info->id))
         {
-            
-            if(trim($student_info->class) != trim($user_detail->class_name))
-            {
-                $this->session->set_flashdata('message', 'Sorry! Your class & student class is not matched');
-                redirect('report/viewstudents');
-    
-            }
-            
-            if(trim($student_info->section) != trim($user_detail->class_section))
-            {
-                $this->session->set_flashdata('message', 'Sorry! Your class section & student class section is not matched');
-                redirect('report/viewstudents');
-    
-            } 
+                $this->validateAccessPage($id);
 
-            if($student_info->academic_years_id != $user_detail->session_id) 
-            {
-                $this->session->set_flashdata('message', 'Sorry! You are not authorized to access this student details');
-                redirect('report/viewstudents');
-    
-            }
-            
                 $this->data['student_result']   = $this->report->get_result_info($id);
 
                 $this->data['teacher_details'] = $this->report->get_class_incharge($student_info,$student_info->session_id);
@@ -2080,11 +2106,13 @@ class Report extends My_Controller
 
     public function DownloadReport($id)
     {
+        $this->validateAccessPage($id);
 
         $user_detail = $this->report->get_userdetail($this->session->userdata('id'));
         $this->data['principal_detail'] = $this->db->where('role_id', 2)->get('users')->row();
         $student_info = $this->report->get_student_info($id);
         $this->data['student_info'] = $student_info;
+
 
         $this->data['student_result']   = $this->report->get_result_info($id);
         $this->data['setting'] = $this->Setting->get_single('settings', array('status' => 1));
@@ -2237,7 +2265,8 @@ class Report extends My_Controller
     * @param           : $id integer value
     * @return          : null 
     * ********************************************************** */
-    public function deleteStudent($id = null) {
+    public function deleteStudent($id = null) 
+    {
 
         // check_permission(DELETE);
 
@@ -2249,6 +2278,7 @@ class Report extends My_Controller
         $StudentResult = $this->report->get_single('result_students', array('id' => $id));
         if (!empty($StudentResult)) 
         {
+            $this->validateAccessPage($id);
 
             // delete student data
             $this->report->delete('result_students', array('id' => $id));

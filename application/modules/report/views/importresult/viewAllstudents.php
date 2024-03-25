@@ -77,6 +77,7 @@
                                         <tr>
                                             <th><input type="checkbox" name="select_all" class="select_all" id="checkedAll"></th>
                                             <th>#SL</th>
+                                            <th>Image</th>
                                             <th>SRN No.</th>
                                             <th>DOB (use as password)</th>
                                             <th>Name</th>
@@ -95,15 +96,33 @@
                                                         <input type="checkbox" name="student_status[<?= $obj->id ?>]" class="checkSingle" value="<?= $obj->id ?>">
                                                     </td>
                                                     <td><?php echo $count; ?></td>
+                                                    <td><?php 
+                                                     if($obj->photo == null)
+                                                      {
+                                                         echo '<img src="'.base_url('assets/images/profile.jpg').'" width="50px" data-srn="'.$obj->srn.'" data-id="'.$obj->id.'" data-class-name="'.$obj->class.'" class="imageUpload">';
+
+                                                       } else {
+
+                                                         echo '<img src="'.base_url('assets/uploads/student-photo/class/'.$obj->class.'/'.$obj->photo).'" width="50px" data-srn="'.$obj->srn.'" data-id="'.$obj->id.'" data-class-name="'.$obj->class.'" class="imageUpload">'; 
+                                                       }
+                                                    ?>
+                                                         
+                                                    </td>
                                                     <td><?php echo $obj->srn; ?></td>
                                                     <td><?php echo $obj->dob; ?></td>
                                                     <td><?php echo $obj->name; ?></td>
                                                     <td><?php echo $obj->father_name; ?></td>
                                                     <td><?php echo $obj->mother_name; ?></td>
                                                     <td><?php echo $obj->status == 1 ? 'Approved' : 'Dis-Approved'; ?></td>
-                                                    <td> 
-                                                        <a href="<?= site_url('report/DownloadReport/' . $obj->id) ?>" target="_blank" class="btn btn-info btn-xs" target="_blank"><i class="fa fa-eye"></i> <?php echo $this->lang->line('view'); ?> </a>
-                                                </td>
+                                                    <td>
+                                                        <a href="<?= site_url('report/editStudentDetails/' . $obj->id) ?>" class="btn btn-warning btn-xs"><i class="fa fa-pencil"></i> Edit </a>
+
+                                                        <a href="<?= site_url('report/viewStudentResultDetails/' . $obj->id) ?>" target="_blank" class="btn btn-info btn-xs"><i class="fa fa-eye"></i> <?php echo $this->lang->line('view'); ?> </a>
+
+                                                        <a href="<?= site_url('report/DownloadReport/' . $obj->id) ?>" target="_blank" class="btn btn-success btn-xs"><i class="fa fa-download"></i> <?php echo $this->lang->line('download'); ?> </a>
+
+                                                        <a href="<?= site_url('report/deleteStudent/' . $obj->id) ?>" class="btn btn-success btn-xs" onclick="return confirm('Are you sure to delete the record of this Student SR No. - <?php echo $obj->srn; ?>?')"><i class="fa fa-trash"></i> <?php echo $this->lang->line('delete'); ?> </a>
+                                                    </td>
                                                 </tr>
                                             <?php $count++; } ?>
                                         <?php } ?>
@@ -120,7 +139,105 @@
 </div>
 </div>
 </div>
+
+<div class="modal fade" id="imageuploadModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Upload Image</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form id="uploadImageForm" action="<?= base_url('report/uploadImage') ?>" method="post" enctype="multipart/form-data">
+                                                        <label style="font-size: 20px;">SRN : <span id="srn_no" ></span></label>
+
+                                                        <img id="imagePrev" width="150px" style="border: 1px solid black;">
+
+                                                        <input type="hidden" name="student_id">
+                                                        <input type="hidden" name="srn">
+                                                        <input type="hidden" name="class">
+                                                        <br/>
+                                                        <br/>
+
+                                                        <input type="file" class="form-control" name="photo" required>
+
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button id="save_btn" type="button" class="btn btn-primary" data-dismiss="modal">Upload</button>
+                                                    <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+<link href="<?php echo VENDOR_URL; ?>datepicker/datepicker.css" rel="stylesheet">
+<script src="<?php echo VENDOR_URL; ?>datepicker/datepicker.js"></script>
 <script>
+        $('.imageUpload').on('click',function(){
+
+var srn = $(this).attr('data-srn');
+var id = $(this).attr('data-id');
+var className = $(this).attr('data-class-name');
+var src = $(this).attr('src');
+
+$('form#uploadImageForm input[name="student_id"]').val(id);
+$('form#uploadImageForm input[name="srn"]').val(srn);
+$('form#uploadImageForm input[name="class"]').val(className);
+
+$('form#uploadImageForm #srn_no').text(srn);
+
+$('form#uploadImageForm #imagePrev').attr('src',src);
+
+$('#imageuploadModal').modal('show');
+})
+
+$(document).ready(function () {
+
+    $("#dob_main").datepicker( {
+            format: "dd-M-yyyy"
+        });
+
+$("#save_btn").click(function () {
+
+    $('#uploadImageForm').submit();
+  
+});
+
+
+function readURL(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            $('#imagePrev').attr('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+$("input[name='photo']").change(function(){
+
+    var file = this.files[0];
+    var fileType = file["type"];
+    var validImageTypes = ["image/jpg", "image/jpeg", "image/png"];
+    if ($.inArray(fileType, validImageTypes) < 0) 
+    {
+       alert('Please upload jpg/jpeg/png extension image');
+       location.reload();
+       return false;
+    }
+
+    if(this.files[0].size>3048576) {
+            alert('File size is larger than 3MB!');
+    }
+
+    readURL(this);
+});
+});
+
     $('#select_class').on('change', function() {
         window.location.href = "<?= base_url('report/viewstudents?class=') ?>" + encodeURIComponent(this.value);
     })
@@ -163,4 +280,17 @@
         background: #f27575 !important;
         color: white !important;
     }
-</style>
+    input[type="file"] {
+        display: block;
+        position: relative !important;
+        top: 0;
+        right: 0;
+        min-width: 50%;
+        min-height: 100%;
+        font-size: 15px;
+        text-align: inherit;
+        opacity: 1;
+    }
+
+    
+    </style>
