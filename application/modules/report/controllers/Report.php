@@ -1235,7 +1235,7 @@ class Report extends My_Controller
                             $sub6 = $subjects['AH'];
                             unset($allDataInSheet[0]);
                             if ($user_detail->class_name == $class) {
-                                $subject_Array = array($sub1, $sub2, $sub3, $sub4, $sub5, $sub6);
+                                $subject_Array = array($sub1, $sub2, $sub3, $sub4);
 
                                 //   $subject_Array = array('English','Hindi','Maths','Science','Social Science','Optional');
                                 foreach ($allDataInSheet as $key) {
@@ -1270,24 +1270,33 @@ class Report extends My_Controller
                                             $this->db->where('id', $InsertId)->update('result_students', $insertData);
                                         }
                                         foreach ($subject_Array as $key1 => $value) {
+                                            
 
-                                            $SubjectCodes = explode(' ', $value);
-                                            $subjectName = isset($SubjectCodes[0]) ? $SubjectCodes[0] : '';
-                                            $subjectCode = isset($SubjectCodes[1]) ? $SubjectCodes[1] : '';
-                                            $SubCode = preg_replace("/[^0-9]/", "",  $subjectCode);
+                                            if($class <= 5)
+                                            {
+                                                $subjectName = $value;
+                                                $subjectCode = '';
 
-                                            $query = $this->db->where('session_id', $sessionId)
-                                                ->where('class', $class)
-                                                ->where('section', $section)
-                                                ->where('student_id', $InsertId)
-                                                ->where('subject_name', $subjectName)
-                                                ->get('results');
+                                            } else {
+
+                                                $SubjectCodes = explode(' ', $value);
+                                                $subjectName = isset($SubjectCodes[0]) ? $SubjectCodes[0] : '';
+                                                $subjectCode = isset($SubjectCodes[1]) ? $SubjectCodes[1] : '';
+                                                $SubCode = preg_replace("/[^0-9]/", "",  $subjectCode);
+
+                                                $query = $this->db->where('session_id', $sessionId)
+                                                    ->where('class', $class)
+                                                    ->where('section', $section)
+                                                    ->where('student_id', $InsertId)
+                                                    ->where('subject_name', $subjectName)
+                                                    ->get('results');
+                                            }
 
                                             $insert_result['class']      = $class;
                                             $insert_result['section']    = $section;
                                             $insert_result['session_id'] = $sessionId;
                                             $insert_result['student_id'] = $InsertId;
-
+                                            
                                             if ($key1 == 0) {
                                                 $insert_result['subject_name'] = $subjectName;
                                                 $insert_result['subject_code'] = $SubCode;
@@ -1327,6 +1336,7 @@ class Report extends My_Controller
                                                 $insert_result['total']         = $key['AB'];
                                                 $insert_result['optional_status'] = 1;
                                             } elseif ($key1 == 4) {
+                                                
                                                 $insert_result['subject_name'] = $subjectName;
                                                 $insert_result['subject_code'] = $SubCode;
                                                 $insert_result['term_one']      = $key['AC'];
@@ -1337,25 +1347,33 @@ class Report extends My_Controller
                                                 $insert_result['optional_status'] = 1;
                                             } elseif ($key1 == 5) {
 
-                                                $SubjectCodes = explode(' ', $key['AH']);
-                                                $subjectName = isset($SubjectCodes[0]) ? $SubjectCodes[0] : '';
-                                                $subjectCode = isset($SubjectCodes[1]) ? $SubjectCodes[1] : '';
-                                                $SubCode = preg_replace("/[^0-9]/", "",  $subjectCode);
+                                                if($class <= 5)
+                                                {
+                                                    $subjectName = $value;
+                                                    $subjectCode = '';
 
-                                                $query = $this->db->where('session_id', $sessionId)
-                                                    ->where('class', $class)
-                                                    ->where('section', $section)
-                                                    ->where('student_id', $InsertId)
-                                                    ->where('subject_name', $subjectName)
-                                                    ->get('results');
-                                                $insert_result['subject_name']  = $subjectName;
-                                                $insert_result['subject_code']  = $SubCode;
-                                                $insert_result['term_one']      = $key['AI'];
-                                                $insert_result['term_two']      = $key['AJ'];
-                                                $insert_result['th_term_total'] = $key['AK'];
-                                                $insert_result['in_term_total'] = $key['AL'];
-                                                $insert_result['optional_status'] = 0;
-                                                $insert_result['total']         = $key['AM'];
+                                                } else {
+
+                                                        $SubjectCodes = explode(' ', $key['AH']);
+                                                        $subjectName = isset($SubjectCodes[0]) ? $SubjectCodes[0] : '';
+                                                        $subjectCode = isset($SubjectCodes[1]) ? $SubjectCodes[1] : '';
+                                                        $SubCode = preg_replace("/[^0-9]/", "",  $subjectCode);
+
+                                                        $query = $this->db->where('session_id', $sessionId)
+                                                            ->where('class', $class)
+                                                            ->where('section', $section)
+                                                            ->where('student_id', $InsertId)
+                                                            ->where('subject_name', $subjectName)
+                                                            ->get('results');
+                                                    $insert_result['subject_name']  = $subjectName;
+                                                    $insert_result['subject_code']  = $SubCode;
+                                                    $insert_result['term_one']      = $key['AI'];
+                                                    $insert_result['term_two']      = $key['AJ'];
+                                                    $insert_result['th_term_total'] = $key['AK'];
+                                                    $insert_result['in_term_total'] = $key['AL'];
+                                                    $insert_result['optional_status'] = 0;
+                                                    $insert_result['total']         = $key['AM'];
+                                                }
                                             }
 
                                             if ($query->num_rows() == 0) {

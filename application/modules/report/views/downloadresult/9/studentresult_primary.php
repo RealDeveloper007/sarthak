@@ -218,7 +218,7 @@
 			<th colspan="8" align="left" class="right">Scholastic Area</th>
 		</tr>
 		<tr>
-			<th class="nowrap" align="center" rowspan="2">SUBJECT<br>CODE</th>
+			<th class="nowrap" align="center" rowspan="2"></th>
 			<th class="nowrap" align="center" rowspan="2">SUBJECT<br>DETAILS</th>
 			<th colspan="2" align="center">Theory</th>
 			<th colspan="2" align="center">Internal Assessment</th>
@@ -237,19 +237,19 @@
 		$CalculateArray = [];
 		foreach ($student_result as $obj) {
 			$status = $obj->optional_status == 0 ? '' : '';
-			if ($obj->subject_code != "087" && $obj->subject_code != "") {
+			// if ($obj->subject_code != "087" && $obj->subject_code != "") {
 		?>
 			<tr>
 				<th align="center"><?php
-									if ($obj->subject_name == "IT" || $obj->subject_name == "B&W") {
-										$subject = $obj->subject_name;
-										$get_code = substr($subject, strpos($subject, "(") + 1);
-										$code = substr($get_code, 0, -1);
-										echo $obj->subject_code;
-									} else {
-										$code = $obj->subject_code;
-										echo $code;
-									}
+									// if ($obj->subject_name == "IT" || $obj->subject_name == "B&W") {
+									// 	$subject = $obj->subject_name;
+									// 	$get_code = substr($subject, strpos($subject, "(") + 1);
+									// 	$code = substr($get_code, 0, -1);
+									// 	echo $obj->subject_code;
+									// } else {
+									// 	$code = $obj->subject_code;
+									// 	echo $code;
+									// }
 									?></th>
 				<th class="nowrap"><?php
 									if ($obj->subject_name == "IT" || $obj->subject_name == "B&W") {
@@ -259,15 +259,15 @@
 									} ?></th>
 				<th align="center">
 			<?php if ($obj->subject_name == "IT" || $obj->subject_name == "B&W" || $obj->subject_name == "Comp.Application") { 
-						$thTotal = 50;  
+						$thTotal = 60;  
 					} else if (strtolower($obj->subject_name) == "home.sc.") { 
-						$thTotal = 70; 
+						$thTotal = 60; 
 					} else if ($obj->subject_name == "Painting") { 
-						$thTotal = 30; 
+						$thTotal = 60; 
 					} else { 
-						$thTotal = 80; 
+						$thTotal = 60; 
 					} 
-					echo $thTotal;
+					echo '60';
 					?>
 				</th>
 				<?php if($style){ ?>
@@ -286,15 +286,15 @@
 				<?php } ?>
 				<th align="center" >
 					<?php if ($obj->subject_name == "IT" || $obj->subject_name == "B&W" || $obj->subject_name == "Comp.Application") { 
-						$inTotal = 50;
+						$inTotal = 40;
 					} else if (strtolower($obj->subject_name) == "home.sc.") { 
-						$inTotal = 30; 
+						$inTotal = 40; 
 					} else if ($obj->subject_name == "Painting") { 
-						$inTotal = 70; 
+						$inTotal = 40; 
 					} else { 
-						$inTotal = 20; 
+						$inTotal = 40; 
 					} 
-					echo $inTotal;
+					echo '40';
 					?>
 				</th>
 				<?php if($style){ ?>
@@ -320,7 +320,7 @@
     		            
 			}
 			
-		} 
+		// } 
 		
 		 if($student_info->class <9)
         			{
