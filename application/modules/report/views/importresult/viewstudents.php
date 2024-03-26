@@ -163,7 +163,7 @@
                                     <div class="col-md-3 col-sm-3 col-xs-12">
                                         <div class="item form-group">
                                             <label for="dob_main"><?php echo 'DOB'; ?> <span class="required">*</span></label>
-                                            <input  class="form-control col-md-7 col-xs-12"  name="dob_main"  id="dob_main" value="<?php echo isset($student->dob_main) ?  $student->dob_main : ''; ?>" placeholder="<?php echo 'DOB'; ?>" required="required" type="text">
+                                            <input  class="form-control col-md-7 col-xs-12"  name="dob_main"  id="dob_main" value="<?php echo isset($student->dob_main) ?  date('d-M-Y',strtotime($student->dob_main)) : ''; ?>" placeholder="<?php echo 'DOB'; ?>" required="required" type="text">
                                             <div class="help-block"><?php echo form_error('dob_main'); ?></div> 
                                         </div>
                                     </div>     
@@ -254,7 +254,15 @@
 
                                     <div class="col-md-3 col-sm-3 col-xs-12">
                                         <div class="item form-group">
-                                            <label for="work_exp"><?php echo 'Work Experience'; ?> <span class="required">*</span></label>
+                                            <?php if($student->class == 9) { ?>
+
+                                                <label for="work_exp"><?php echo 'Art Education'; ?> <span class="required">*</span></label>
+
+                                            <?php } else { ?>
+
+                                                <label for="work_exp"><?php echo 'Work Experience'; ?> <span class="required">*</span></label>
+
+                                            <?php } ?>
                                             <input  class="form-control col-md-7 col-xs-12"  name="work_exp"  id="work_exp" value="<?php echo isset($student->work_exp) ?  $student->work_exp : ''; ?>" placeholder="<?php echo 'Work Experience'; ?>" required="required" type="text" autocomplete="off">
                                             <div class="help-block"><?php echo form_error('work_exp'); ?></div>
                                         </div>
@@ -262,7 +270,13 @@
 
                                     <div class="col-md-3 col-sm-3 col-xs-12">
                                         <div class="item form-group">
+                                        <?php if($student->class == 9) { ?>
+
+                                            <label for="general_study"><?php echo 'Work Education'; ?> <span class="required">*</span></label>
+                                        <?php } else { ?>
                                             <label for="general_study"><?php echo 'General Study'; ?> <span class="required">*</span></label>
+
+                                            <?php } ?>
                                             <input  class="form-control col-md-7 col-xs-12"  name="general_study"  id="general_study" value="<?php echo isset($student->general_study) ?  $student->general_study : ''; ?>" placeholder="<?php echo 'General Study'; ?>" required="required" type="text" autocomplete="off">
                                             <div class="help-block"><?php echo form_error('general_study'); ?></div>
                                         </div>

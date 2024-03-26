@@ -313,12 +313,12 @@
 
 		<tr>
 			<th colspan="6" rowspan="2" class="bottom"></th>
-			<th align="left" class="nowrap"><?= $student_info->result_status == 'P' ? 'G.Total (500)' : 'G.Total (500)' ?></th>
-			<th align="center" class="right"><?= $student_info->result_status == 'P' ?  floor($ob) : '-' ?></th>
+			<th align="left" class="nowrap"><?= strtoupper($student_info->result_status) == 'P' ? 'G.Total (500)' : 'G.Total (500)' ?></th>
+			<th align="center" class="right"><?= strtoupper($student_info->result_status) == 'P' ?  floor($ob) : '-' ?></th>
 		</tr>
 		<tr>
 			<th align="left" class="bottom nowrap">Percentage</th>
-			<th class="bottom right" align="center"><?= $student_info->result_status == 'P' ? round(($ob * 100) / $tt, 2).'%' : '-' ?></th>
+			<th class="bottom right" align="center"><?= strtoupper($student_info->result_status) == 'P' ? round(($ob * 100) / $tt, 2).'%' : '-' ?></th>
 		</tr>
 		<!-- Blank Row -->
 		<tr>

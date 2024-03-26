@@ -353,11 +353,11 @@
 			<td colspan="2" align="center" class="right"><?= $student_info->health_activity ?></td>
 		</tr>
 		<tr>
-			<th colspan="6" align="left">Work Education</th>
+			<th colspan="6" align="left">Art Education</th>
 			<td colspan="2" align="center" class="right"><?= $student_info->work_exp ?></td>
 		</tr>
 		<tr>
-			<th colspan="6" align="left">Art Education</th>
+			<th colspan="6" align="left">Work Education</th>
 			<td colspan="2" align="center" class="right"><?= $student_info->general_study ?></td>
 		</tr>
 		<tr>

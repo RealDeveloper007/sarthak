@@ -1940,12 +1940,16 @@ class Report extends My_Controller
                 $this->validateAccessPage($id);
 
                 $data = $_POST;
+                $dob = date('d-m-Y', strtotime($_POST['dob_main']));
+                $data['dob'] = str_replace("-", "", $dob);
                 $data['updated'] = date('Y-m-d H:i:s');
+
+                // print_r($data); die;
 
                 $updated = $this->report->update('result_students', $data, array('id' => $this->input->post('id')));
 
-                if ($updated) {
-                    
+                if ($updated) 
+                {
                     create_log('Has been updated a Student  Details : '.$data['srn']);
                     success($this->lang->line('update_success'));
                     redirect('report/viewstudents');
