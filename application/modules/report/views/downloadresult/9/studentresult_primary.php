@@ -335,15 +335,15 @@
 
 			<tr>
 			<th colspan="6" rowspan="2" class="bottom"></th>
-			<th align="left" class="nowrap"><?= $student_info->result_status == 'P' ? 'G.Total (400)' : 'G.Total (400)' ?></th>
-			<th class="right" align="center"><?= $student_info->result_status == 'P' ?  floor($ObMarks) : '-' ?></th>
+			<th align="left" class="nowrap"><?= strtoupper($student_info->result_status) == 'P' ? 'G.Total (400)' : 'G.Total (400)' ?></th>
+			<th class="right" align="center"><?= strtoupper($student_info->result_status) == 'P' ?  floor($ObMarks) : '-' ?></th>
 		</tr>
 		<tr>
 			<th align="left" class="bottom nowrap">Percentage 
 		
 			
 			</th>
-			<th class="bottom right" align="center"><?= $student_info->result_status == 'P' ? round(($ObMarks * 100) / $tt, 2).'%' : '-' ?></th>
+			<th class="bottom right" align="center"><?= strtoupper($student_info->result_status) == 'P' ? round(($ObMarks * 100) / $tt, 2).'%' : '-' ?></th>
 		</tr>
 		<!-- Blank Row -->
 		<tr>
