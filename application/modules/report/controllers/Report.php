@@ -1235,7 +1235,12 @@ class Report extends My_Controller
                             $sub6 = $subjects['AH'];
                             unset($allDataInSheet[0]);
                             if ($user_detail->class_name == $class) {
-                                $subject_Array = array($sub1, $sub2, $sub3, $sub4);
+                                if($class <=5)
+                                {
+                                    $subject_Array = array($sub1, $sub2, $sub3, $sub4);
+                                } else {
+                                    $subject_Array = array($sub1, $sub2, $sub3, $sub4, $sub5, $sub6);
+                                }
 
                                 //   $subject_Array = array('English','Hindi','Maths','Science','Social Science','Optional');
                                 foreach ($allDataInSheet as $key) {
