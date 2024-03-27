@@ -306,8 +306,9 @@
 				<th align="center">100</th>
 				<th align="center" class="right"><?=  $obj->total != 0 ? floor($obj->total) : '-' ?></th>
 			</tr>
+			
 		<?php
-			if($ob->subject_additional ==0)
+			if($obj->subject_additional ==0)
 			{
 				$ob = $ob + $obj->total;
 				$tt = $tt + 100;
