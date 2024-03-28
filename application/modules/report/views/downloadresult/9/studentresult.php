@@ -300,7 +300,7 @@
 				<?php } else { ?>
 
 					<th align="center">
-						<?= floor($obj->in_term_total) ?>
+						<?= $obj->in_term_total==null ? '-' : floor($obj->in_term_total) ?>
 					</th>
 
 				<?php } ?>
